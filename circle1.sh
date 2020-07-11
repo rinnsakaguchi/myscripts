@@ -162,7 +162,7 @@ tg_channelcast "<b>$CIRCLE_BUILD_NUM CI Build Triggered</b>" \
 START=$(date +"%s")
 makekernel || exit 1
 shipkernel
-setn   setnewcam
+setnewcam
 END=$(date +"%s")
 DIFF=$(( END - START ))
 tg_channelcast "Build for ${DEVICE} with ${COMPILER_STRING} <b>succeed</b> took $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)!"
