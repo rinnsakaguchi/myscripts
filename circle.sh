@@ -7,50 +7,43 @@
 # CI build script
 
 # Needed exports
-export TELEGRAM_TOKEN=${BOT_API_TOKEN}
+export TELEGRAM_TOKEN=1206672611:AAGYbqxf4SN8f_Zsg3pa6nxOltilb3e8IN0
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=SiLonT
-DEFCONFIG=vendor/ginkgo-perf_defconfig
-DEVICE=ginkgo
+KERNEL=STRIX
+DEFCONFIG=tulip_defconfig
+DEVICE=tulip
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
-# output file
-if [[ "${PARSE_BRANCH}" =~ "pie"* ]]; then
-    OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
-else
-    OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz
-fi
+# Export custom KBUILD
+export KBUILD_BUILD_USER=builder
+export KBUILD_BUILD_HOST=fiqriardyansyah
 
 # Kernel groups
-CI_CHANNEL=-1001156668998
-TG_GROUP=-1001254060097
+CI_CHANNEL=-1001466536460
+TG_GROUP=-1001287488921
+
+# Set default local datetime
+DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
+BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Clang is annoying
 PATH="${KERNELDIR}/clang/bin:${PATH}"
 
 # Kernel revision
-KERNELRELEASE=ginkgo
+KERNELTYPE=EAS
+KERNELRELEASE=tulip
 
 # Function to replace defconfig versioning
 setversioning() {
-    if [[ "${PARSE_BRANCH}" =~ "pie"* ]]; then
-    	# For Pie branch
-	    KERNELTYPE=PIE
-	    KERNELNAME="${KERNEL}-${KERNELRELEASE}-${KERNELTYPE}-$(date +%y%m%d-%H%M)"
-    elif [[ "${PARSE_BRANCH}" =~ "Q-rebase"* ]]; then
-	    # For Q branch
-	    KERNELTYPE=A10
-	    KERNELNAME="${KERNEL}-${KERNELRELEASE}-$KERNELTYPE-$(date +%y%m%d-%H%M)"
-    else
-	    # For test
-	    KERNELTYPE=Test
-	    KERNELNAME="${KERNEL}-${KERNELRELEASE}-$KERNELTYPE-$(date +%y%m%d-%H%M)"
-    fi
+
+    # For staging branch
+    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-nightly-${BUILD_DATE}"
+    sed -i "50s/.*/CONFIG_LOCALVERSION=\"-${KERNELNAME}\"/g" arch/arm64/configs/${DEFCONFIG}
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
@@ -80,8 +73,8 @@ tg_channelcast() {
 
 # Fix long kernel strings
 kernelstringfix() {
-    git config --global user.name "azrim"
-    git config --global user.email "mirzaspc@gmail.com"
+    git config --global user.name "Fiqri Ardyansyah"
+    git config --global user.email "fiqri15072019@gmail.com"
     git add .
     git commit -m "stop adding dirty"
 }
@@ -90,11 +83,7 @@ kernelstringfix() {
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    if [[ "${PARSE_BRANCH}" =~ "pie"* ]]; then
-        git clone https://github.com/azrim/kerneltemplate -b pie ${ANYKERNEL}
-    else
-        git clone https://github.com/azrim/kerneltemplate -b dtb ${ANYKERNEL}
-    fi
+    git clone https://github.com/fiqri19102002/AnyKernel3.git -b linage-17.1-tulip ${ANYKERNEL}
     kernelstringfix
     make O=out ARCH=arm64 ${DEFCONFIG}
     if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
@@ -117,15 +106,7 @@ makekernel() {
 # Ship the compiled kernel
 shipkernel() {
     # Copy compiled kernel
-    if [[ "${PARSE_BRANCH}" =~ "pie"* ]]; then
-        cp "${OUTDIR}"/arch/arm64/boot/Image.gz-dtb "${ANYKERNEL}"/
-    else
-        mkdir "${ANYKERNEL}"/kernel
-        mkdir "${ANYKERNEL}"/dtbs
-        cp "${OUTDIR}"/arch/arm64/boot/Image.gz "${ANYKERNEL}"/kernel
-        cp "${OUTDIR}"/arch/arm64/boot/dts/qcom/trinket.dtb "${ANYKERNEL}"/dtbs/
-    fi
-
+    cp "${OUTDIR}"/arch/arm64/boot/Image.gz-dtb "${ANYKERNEL}"/
 
     # Zip the kernel, or fail
     cd "${ANYKERNEL}" || exit
@@ -142,15 +123,8 @@ shipkernel() {
     cd ..
 }
 
-# Fix for CI builds running out of memory
-fixcilto() {
-    sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/g' arch/arm64/configs/${DEFCONFIG}
-    sed -i 's/CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y/# CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is not set/g' arch/arm64/configs/${DEFCONFIG}
-}
-
 ## Start the kernel buildflow ##
 setversioning
-fixcilto
 tg_groupcast "${KERNEL} compilation clocked at $(date +%Y%m%d-%H%M)!"
 tg_channelcast "<b>$CIRCLE_BUILD_NUM CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
