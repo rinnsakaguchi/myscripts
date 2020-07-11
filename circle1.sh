@@ -12,8 +12,8 @@ export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
 KERNEL=PREDATOR
-DEFCONFIG=X00T_defconfig
-DEVICE=X00T
+DEFCONFIG=predator_defconfig
+DEVICE=whyred
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
@@ -141,7 +141,7 @@ clearout() {
 
 #Setver 2 for newcam
 setver2() {
-    KERNELNAME="${KERNEL}-${KERNELRELEASE}-NewCam-${BUILD_DATE}"
+    KERNELNAME="${KERNEL}-${KERNELRELEASE}-nightly-NewCam-${BUILD_DATE}"
     sed -i "50s/.*/CONFIG_LOCALVERSION=\"-${KERNELNAME}\"/g" arch/arm64/configs/${DEFCONFIG}
     export KERNELTYPE KERNELNAME
     export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
