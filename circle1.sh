@@ -148,6 +148,17 @@ setver2() {
     export ZIPNAME="${KERNELNAME}.zip"
 }
 
+    export KERNELTYPE KERNELNAME
+    export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
+    export ZIPNAME="${KERNELNAME}.zip"
+}
+
+# Fix for CI builds running out of memory
+fixcilto() {
+    sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/g' arch/arm64/configs/${DEFCONFIG}
+    sed -i 's/CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y/# CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is not set/g' arch/arm64/configs/${DEFCONFIG}
+}
+
 ## Start the kernel buildflow ##
 setversioning
 tg_groupcast "${KERNEL} compilation clocked at $(date +%Y%m%d-%H%M)!"
