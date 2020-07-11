@@ -7,13 +7,13 @@
 # CI build script
 
 # Needed exports
-export TELEGRAM_TOKEN=1206672611:AAGYbqxf4SN8f_Zsg3pa6nxOltilb3e8IN0
+export TELEGRAM_TOKEN=1272228481:AAG91jVp52QLnAV1krBqcenQKiLXxFUc8g8
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=STRIX
-DEFCONFIG=tulip_defconfig
-DEVICE=tulip
+KERNEL=PREDATOR
+DEFCONFIG=X00T_defconfig
+DEVICE=X00T
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
@@ -21,11 +21,11 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
 export KBUILD_BUILD_USER=builder
-export KBUILD_BUILD_HOST=fiqriardyansyah
+export KBUILD_BUILD_HOST=PREDATOR
 
 # Kernel groups
-CI_CHANNEL=-1001466536460
-TG_GROUP=-1001287488921
+CI_CHANNEL=-1001478864606
+TG_GROUP=-1001350394604
 
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
@@ -36,7 +36,7 @@ PATH="${KERNELDIR}/clang/bin:${PATH}"
 
 # Kernel revision
 KERNELTYPE=EAS
-KERNELRELEASE=tulip
+KERNELRELEASE=X00T
 
 # Function to replace defconfig versioning
 setversioning() {
@@ -73,8 +73,8 @@ tg_channelcast() {
 
 # Fix long kernel strings
 kernelstringfix() {
-    git config --global user.name "Fiqri Ardyansyah"
-    git config --global user.email "fiqri15072019@gmail.com"
+    git config --global user.name "predator112"
+    git config --global user.email "mi460334@gmail.com"
     git add .
     git commit -m "stop adding dirty"
 }
@@ -83,7 +83,7 @@ kernelstringfix() {
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    git clone https://github.com/fiqri19102002/AnyKernel3.git -b linage-17.1-tulip ${ANYKERNEL}
+    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BULDOSER-X00T-EAS ${ANYKERNEL}
     kernelstringfix
     make O=out ARCH=arm64 ${DEFCONFIG}
     if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
