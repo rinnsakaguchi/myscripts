@@ -22,6 +22,7 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 # Export custom KBUILD
 export KBUILD_BUILD_USER=builder
 export KBUILD_BUILD_HOST=PREDATOR
+export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
 CI_CHANNEL=-1001478864606
