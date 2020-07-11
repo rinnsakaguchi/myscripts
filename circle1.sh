@@ -37,7 +37,7 @@ PATH="${KERNELDIR}/clang/bin:${PATH}"
 
 # Kernel revision
 KERNELTYPE=EAS
-KERNELRELEASE=X00T
+KERNELRELEASE=whyred
 
 # Function to replace defconfig versioning
 setversioning() {
