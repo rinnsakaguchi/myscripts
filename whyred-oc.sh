@@ -12,7 +12,7 @@ export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
 KERNEL=PREDATOR
-DEFCONFIG=predator_defconfig
+DEFCONFIG=whyred-perf_defconfig
 DEVICE=whyred
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -36,13 +36,13 @@ BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 PATH="${KERNELDIR}/clang/bin:${PATH}"
 
 # Kernel revision
-KERNELTYPE=EAS
+KERNELTYPE=HMP
 KERNELRELEASE=whyred
 
 # Function to replace defconfig versioning
 setversioning() {
         # For staging branch
-            KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-OldCam-OC-${BUILD_DATE}"
+            KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-OldCam-${BUILD_DATE}"
             sed -i "50s/.*/CONFIG_LOCALVERSION=\"-${KERNELNAME}\"/g" arch/arm64/configs/${DEFCONFIG}
 
     # Export our new localversion and zipnames
@@ -140,7 +140,7 @@ clearout() {
 
 #Setver 2 for newcam
 setver2() {
-    KERNELNAME="${KERNEL}-${KERNELRELEASE}-NewCam-OC-${BUILD_DATE}"
+    KERNELNAME="${KERNEL}-${KERNELRELEASE}-NewCam-${BUILD_DATE}"
     sed -i "50s/.*/CONFIG_LOCALVERSION=\"-${KERNELNAME}\"/g" arch/arm64/configs/${DEFCONFIG}
     export KERNELTYPE KERNELNAME
     export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
