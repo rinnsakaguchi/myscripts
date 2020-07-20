@@ -26,7 +26,7 @@ export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
 CI_CHANNEL=-1001418824983
-TG_GROUP=-1001350394604
+TG_GROUP=-
 
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
@@ -44,7 +44,6 @@ setversioning() {
 
     # For staging branch
     KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-nightly-${BUILD_DATE}"
-    sed -i "50s/.*/CONFIG_LOCALVERSION=\"-${KERNELNAME}\"/g" arch/arm64/configs/${DEFCONFIG}
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
