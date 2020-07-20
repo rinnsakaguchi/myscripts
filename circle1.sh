@@ -26,7 +26,7 @@ export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
 CI_CHANNEL=-1001418824983
-TG_GROUP=-1001350394604
+TG_GROUP=-
 
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
@@ -139,7 +139,7 @@ clearout() {
 
 #Setver 2 for newcam
 setver2() {
-    KERNELNAME="${KERNEL}-${KERNELRELEASE}-NewCam-${BUILD_DATE}"
+    KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-NewCam-${BUILD_DATE}"
     export KERNELTYPE KERNELNAME
     export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
     export ZIPNAME="${KERNELNAME}.zip"
