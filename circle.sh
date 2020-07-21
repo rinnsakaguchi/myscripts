@@ -26,7 +26,6 @@ export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
 CI_CHANNEL=-1001418824983
-TG_GROUP=-
 
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
@@ -49,16 +48,6 @@ setversioning() {
     export KERNELTYPE KERNELNAME
     export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
     export ZIPNAME="${KERNELNAME}.zip"
-}
-
-# Send to main group
-tg_groupcast() {
-    "${TELEGRAM}" -c "${TG_GROUP}" -H \
-    "$(
-		for POST in "${@}"; do
-			echo "${POST}"
-		done
-    )"
 }
 
 # Send to channel
@@ -98,7 +87,6 @@ makekernel() {
 	    DIFF=$(( END - START ))
 	    echo -e "Kernel compilation failed, See buildlog to fix errors"
 	    tg_channelcast "Build for ${DEVICE} <b>failed</b> in $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)! Check ${CIPROVIDER} for errors!"
-	    tg_groupcast "Build for ${DEVICE} <b>failed</b> in $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)! Check ${CIPROVIDER} for errors @wonkelek !"
 	    exit 1
     fi
 }
@@ -125,7 +113,6 @@ shipkernel() {
 
 ## Start the kernel buildflow ##
 setversioning
-tg_groupcast "${KERNEL} compilation clocked at $(date +%Y%m%d-%H%M)!"
 tg_channelcast "<b>$CIRCLE_BUILD_NUM CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
 	"Device: ${DEVICE}" \
@@ -140,4 +127,3 @@ shipkernel
 END=$(date +"%s")
 DIFF=$(( END - START ))
 tg_channelcast "Build for ${DEVICE} with ${COMPILER_STRING} <b>succeed</b> took $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)!"
-tg_groupcast "Build for ${DEVICE} with ${COMPILER_STRING} <b>succeed</b> took $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)! @wonkelek !"
