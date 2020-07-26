@@ -17,8 +17,8 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        https://github.com/NusantaraDevs/clang --depth=1 "${KERNELDIR}"/clang
-        COMPILER_STRING='Nusantara Clang (latest)'
+        https://github.com/NusantaraDevs/clang -b dev/11.0 "${KERNELDIR}"/clang
+        COMPILER_STRING='Nusantara Clang'
 	COMPILER_TYPE='clang'
 else
         # Default to GCC from Arter
