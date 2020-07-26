@@ -17,8 +17,8 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        git clone https://github.com/kdrag0n/proton-clang --depth=1 "${KERNELDIR}"/clang
-        COMPILER_STRING='Proton Clang (latest)'
+        https://github.com/NusantaraDevs/clang --depth=1 "${KERNELDIR}"/clang
+        COMPILER_STRING='Nusantara Clang (latest)'
 	COMPILER_TYPE='clang'
 else
         # Default to GCC from Arter
