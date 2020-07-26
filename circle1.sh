@@ -35,13 +35,12 @@ BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 PATH="${KERNELDIR}/clang/bin:${PATH}"
 
 # Kernel revision
-KERNELTYPE=EAS
 KERNELRELEASE=whyred
 
 # Function to replace defconfig versioning
 setversioning() {
         # For staging branch
-            KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-OldCam-${BUILD_DATE}"
+            KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-TEST-EAS-OldCam-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
@@ -127,7 +126,7 @@ clearout() {
 
 #Setver 2 for newcam
 setver2() {
-    KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-NewCam-${BUILD_DATE}"
+    KERNELNAME="${KERNEL}-${KERNELRELEASE}-TEST-EAS-NewCam-${BUILD_DATE}"
     export KERNELTYPE KERNELNAME
     export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
     export ZIPNAME="${KERNELNAME}.zip"
