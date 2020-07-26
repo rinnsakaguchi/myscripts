@@ -17,7 +17,7 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        https://github.com/NusantaraDevs/clang -b dev/11.0 "${KERNELDIR}"/clang
+        git clone https://github.com/NusantaraDevs/clang -b dev/11.0 "${KERNELDIR}"/clang
         COMPILER_STRING='Nusantara Clang'
 	COMPILER_TYPE='clang'
 else
