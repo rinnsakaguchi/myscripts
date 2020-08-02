@@ -11,7 +11,7 @@ export TELEGRAM_TOKEN=1272228481:AAG91jVp52QLnAV1krBqcenQKiLXxFUc8g8
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=PREDATOR
+KERNEL=Elextrablue
 DEFCONFIG=predator_defconfig
 DEVICE=whyred
 CIPROVIDER=CircleCI
@@ -20,8 +20,8 @@ PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
-export KBUILD_BUILD_USER=builder
-export KBUILD_BUILD_HOST=PREDATOR
+export KBUILD_BUILD_USER=iqbal
+export KBUILD_BUILD_HOST=private
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
@@ -40,7 +40,7 @@ KERNELRELEASE=whyred
 # Function to replace defconfig versioning
 setversioning() {
         # For staging branch
-            KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-TEST-EAS-OldCam-${BUILD_DATE}"
+            KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-OldCam-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
@@ -126,7 +126,7 @@ clearout() {
 
 #Setver 2 for newcam
 setver2() {
-    KERNELNAME="${KERNEL}-${KERNELRELEASE}-TEST-EAS-NewCam-${BUILD_DATE}"
+    KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-NewCam-${BUILD_DATE}"
     export KERNELTYPE KERNELNAME
     export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
     export ZIPNAME="${KERNELNAME}.zip"
