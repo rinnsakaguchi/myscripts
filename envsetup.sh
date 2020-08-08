@@ -17,8 +17,8 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        git clone https://github.com/najahiiii/DragonTC.git -b 9.0 "${KERNELDIR}"/clang
-        COMPILER_STRING='DTC 9.0'
+        git clone https://github.com/kdrag0n/proton-clang --depth=1 "${KERNELDIR}"/clang
+        COMPILER_STRING='proton clang (latest)'
 	COMPILER_TYPE='clang'
 else
         # Default to GCC from Arter
