@@ -17,13 +17,13 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-#cd ${KERNELDIR}
-#mkdir -p clang
-#cd clang
-#wget https://sourceforge.net/projects/mentahan-kernel/files/predator-clang-12.0.zip
-#unzip predator-clang-12.0.zip
-#rm -rf predator-clang-12.0.zip
-#cd ../
+  cd ${KERNELDIR}
+  mkdir -p clang
+  cd clang
+  wget https://sourceforge.net/projects/mentahan-kernel/files/predator-clang-12.0.zip
+  unzip predator-clang-12.0.zip
+  rm -rf predator-clang-12.0.zip
+  cd ../
         COMPILER_STRING='Predator Clang 12.0'
 	COMPILER_TYPE='clang'
 else
