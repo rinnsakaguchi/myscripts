@@ -25,7 +25,7 @@ export KBUILD_BUILD_HOST=Predator
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
-CI_CHANNEL=-1001418824983
+CI_CHANNEL=-1001488385343
 
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
