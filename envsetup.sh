@@ -17,8 +17,14 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        git clone https://github.com/najahiiii/DragonTC.git -b 9.0 "${KERNELDIR}"/clang
-        COMPILER_STRING='DTC 9.0'
+#cd ${KERNELDIR}
+#mkdir -p clang
+#cd clang
+#wget https://sourceforge.net/projects/mentahan-kernel/files/predator-clang-12.0.zip
+#unzip predator-clang-12.0.zip
+#rm -rf predator-clang-12.0.zip
+#cd ../
+        COMPILER_STRING='Predator Clang 12.0'
 	COMPILER_TYPE='clang'
 else
         # Default to GCC from Arter
