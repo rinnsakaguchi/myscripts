@@ -145,6 +145,7 @@ fixcilto() {
 
 ## Start the kernel buildflow ##
 setversioning
+tg_channelcast "<b>$CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
 	"Device: ${DEVICE}" \
 	"Kernel: <code>${KERNEL}, ${KERNELRELEASE}</code>" \
