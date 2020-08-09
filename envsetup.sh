@@ -17,10 +17,10 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        git clone https://github.com/najahiiii/DragonTC.git -b 9.0 "${KERNELDIR}"/clang
+        git clone git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b pie-release "${KERNELDIR}"/clang
         git clone https://github.com/KudProject/aarch64-linux-android-4.9.git "${KERNELDIR}"/gcc
         git clone https://github.com/KudProject/arm-linux-androideabi-4.9.git "${KERNELDIR}"/gcc32
-        COMPILER_STRING='aarch64 gcc 4.9 + arm gcc 4.9 + Dragon TC'
+        COMPILER_STRING='aarch64 gcc 4.9 + arm gcc 4.9 + Google Clang'
 	COMPILER_TYPE='clang'
 else
         # Default to GCC from Arter
