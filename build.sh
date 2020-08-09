@@ -11,7 +11,7 @@ export TELEGRAM_TOKEN=1272228481:AAG91jVp52QLnAV1krBqcenQKiLXxFUc8g8
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=Elextrablue
+KERNEL=perf+
 DEFCONFIG=predator_defconfig
 DEVICE=whyred
 CIPROVIDER=CircleCI
@@ -20,8 +20,8 @@ PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
-export KBUILD_BUILD_USER=iqbal
-export KBUILD_BUILD_HOST=private
+export KBUILD_BUILD_USER=Root
+export KBUILD_BUILD_HOST=LocalHost
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
