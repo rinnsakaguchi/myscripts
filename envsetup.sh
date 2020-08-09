@@ -20,7 +20,9 @@ if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         git clone https://github.com/RaphielGang/aosp-clang.git "${KERNELDIR}"/clang
         git clone https://github.com/KudProject/aarch64-linux-android-4.9.git "${KERNELDIR}"/gcc
         git clone https://github.com/KudProject/arm-linux-androideabi-4.9.git "${KERNELDIR}"/gcc32
-        COMPILER_STRING='aarch64 gcc 4.9 + arm gcc 4.9 + Google Clang'
+        COMPILER_STRING='AARCH64 : GCC 4.9
+                         ARM     : GCC 4.9
+                         CLANG   : GOOGLE CLANG'
 	COMPILER_TYPE='clang'
 else
         # Default to GCC from Arter
