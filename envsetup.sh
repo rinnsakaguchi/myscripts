@@ -19,7 +19,7 @@ COMPILER_TYPES=clang
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         git clone https://github.com/najahiiii/DragonTC.git -b 9.0 "${KERNELDIR}"/clang
         git clone https://github.com/KudProject/aarch64-linux-android-4.9.git "${KERNELDIR}"/gcc
-        git clone https://github.com/KudProject/aarch64-linux-android-4.9.git "${KERNELDIR}"/gcc32
+        git clone https://github.com/KudProject/arm-linux-androideabi-4.9.git "${KERNELDIR}"/gcc32
         COMPILER_STRING='aarch64 gcc 4.9 + arm gcc 4.9 + Dragon TC'
 	COMPILER_TYPE='clang'
 else
