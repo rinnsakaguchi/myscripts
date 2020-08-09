@@ -74,7 +74,12 @@ makekernel() {
     kernelstringfix
     make O=out ARCH=arm64 ${DEFCONFIG}
     if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
-        make -j$(nproc --all) CC=clang CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi- O=out ARCH=arm64
+        make -j$(nproc --all) O=out \
+                              ARCH=arm64 \
+                              CC=clang \
+                              CLANG_TRIPLE=aarch64-linux-gnu- \
+                              CROSS_COMPILE=aarch64-linux-android- \
+                              CROSS_COMPILE_ARM32=arm-linux-androideabi-
     else
 	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     fi
