@@ -16,7 +16,7 @@ OUTDIR=${KERNELDIR}/out
 
 git clone https://github.com/arter97/arm64-gcc.git --depth=1 "${KERNELDIR}/gcc"
 git clone https://github.com/arter97/arm32-gcc.git --depth=1 "${KERNELDIR}/gcc32"
-        COMPILER_STRING='GCC 10
+        COMPILER_STRING='GCC 10'
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
 
