@@ -14,8 +14,8 @@ KERNELDIR="$(pwd)"
 SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
 
-git clone https://github.com/chips-project/aarch64-linux-gnu.git --depth=1 "${KERNELDIR}/gcc"
-git clone https://github.com/arter97/arm32-gcc.git --depth=1 "${KERNELDIR}/gcc32"
+git clone https://github.com/chips-project/aarch64-elf.git --depth=1 "${KERNELDIR}/gcc"
+git clone https://github.com/chips-project/arm-eabi.git --depth=1 "${KERNELDIR}/gcc32"
         COMPILER_STRING='GCC 11.x'
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
