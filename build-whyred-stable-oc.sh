@@ -37,7 +37,7 @@ KERNELRELEASE=whyred
 # Function to replace defconfig versioning
 setversioning() {
         # For staging branch
-            KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-OC-OldCam-${BUILD_DATE}"
+            KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-OC-OldCam-stable-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
