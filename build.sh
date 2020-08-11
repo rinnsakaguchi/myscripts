@@ -21,7 +21,7 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
 export KBUILD_BUILD_USER=Root
-export KBUILD_BUILD_HOST=LocalHost
+export KBUILD_BUILD_HOST=CircleCI
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
@@ -69,7 +69,7 @@ makekernel() {
     rm -rf ${ANYKERNEL}
     git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
-    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-"
+    export CROSS_COMPILE="${KERNELDIR}/gcc/aarch64-linux-elf/bin/aarch64-elf-"
     export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     make O=out ARCH=arm64 ${DEFCONFIG}
     make -j$(nproc --all) O=out ARCH=arm64
