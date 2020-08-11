@@ -39,7 +39,7 @@ KERNELRELEASE=X00T
 setversioning() {
 
     # For staging branch
-    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-${BUILD_DATE}"
+    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-stable-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
@@ -105,6 +105,7 @@ shipkernel() {
     # Go back for any extra builds
     cd ..
 }
+
 # Fix for CI builds running out of memory
 fixcilto() {
     sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/g' arch/arm64/configs/${DEFCONFIG}
