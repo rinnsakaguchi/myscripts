@@ -29,10 +29,7 @@ CI_CHANNEL=-1001488385343
 
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
-BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
-
-# Clang is annoying
-PATH="${KERNELDIR}/clang/bin:${PATH}"
+BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M") ce
 
 # Kernel revision
 KERNELRELEASE=whyred
@@ -72,12 +69,10 @@ makekernel() {
     rm -rf ${ANYKERNEL}
     git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
+    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-"
+    export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     make O=out ARCH=arm64 ${DEFCONFIG}
-    if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
-        make -j$(nproc --all) CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- O=out ARCH=arm64
-    else
-	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
-    fi
+    make -j$(nproc --all) O=out ARCH=arm64
 
     # Check if compilation is done successfully.
     if ! [ -f "${OUTFILE}" ]; then
@@ -140,6 +135,7 @@ fixcilto() {
 
 ## Start the kernel buildflow ##
 setversioning
+fixcilto
 tg_channelcast "<b>CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
 	"Device: ${DEVICE}" \
