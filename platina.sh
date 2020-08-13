@@ -108,8 +108,7 @@ shipkernel() {
 
 # Fix for CI builds running out of memory
 fixcilto() {
-    sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/g' arch/arm64/configs/${DEFCONFIG}
-    sed -i 's/CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y/# CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is not set/g' arch/arm64/configs/${DEFCONFIG}
+    sed -i 's/CONFIG_LTO=y/# s is not set/g' arch/arm64/configs/${DEFCONFIG}
 }
 
 ## Start the kernel buildflow ##
