@@ -106,14 +106,8 @@ shipkernel() {
     cd ..
 }
 
-# Fix for CI builds running out of memory
-fixcilto() {
-    sed -i 's/CONFIG_LTO=y/# s is not set/g' arch/arm64/configs/${DEFCONFIG}
-}
-
 ## Start the kernel buildflow ##
 setversioning
-fixcilto
 tg_channelcast "<b>CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
 	"Device: ${DEVICE}" \
