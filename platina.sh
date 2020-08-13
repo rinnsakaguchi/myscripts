@@ -32,8 +32,8 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Kernel revision
-KERNELTYPE=EAS
-KERNELRELEASE=X00T
+KERNELTYPE=HMP
+KERNELRELEASE=platina
 
 # Function to replace defconfig versioning
 setversioning() {
