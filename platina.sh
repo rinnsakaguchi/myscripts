@@ -69,7 +69,7 @@ kernelstringfix() {
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BULDOSER-X00T-EAS anykernel3
+    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b Phiton-newcam anykernel3
     kernelstringfix
     export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-"
     export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
