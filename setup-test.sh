@@ -14,7 +14,7 @@ KERNELDIR="$(pwd)"
 SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
 
-git clone https://github.com/milouk/gcc-prebuilt-elf-toolchains.git --depth=1 "${KERNELDIR}/gcc"
+git clone https://github.com/chips-project/aarch64-elf.git --depth=1 "${KERNELDIR}/gcc"
 git clone https://github.com/chips-project/arm-eabi.git --depth=1 "${KERNELDIR}/gcc32"
         COMPILER_STRING='GCC 11.x'
 
