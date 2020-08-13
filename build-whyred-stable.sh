@@ -29,7 +29,7 @@ CI_CHANNEL=-1001488385343
 
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
-BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M") ce
+BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Kernel revision
 KERNELRELEASE=whyred
