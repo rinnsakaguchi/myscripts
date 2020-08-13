@@ -15,10 +15,18 @@ SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
 COMPILER_TYPES=clang
 
+# Pick your poison
+if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
+        git clone https://github.com/Panchajanya1999/azure-clang.git -b 11.x "${KERNELDIR}"/clang
+        COMPILER_STRING='azure-clang 11.x'
+	COMPILER_TYPE='clang'
+else
+        # Default to GCC from Arter
         git clone https://github.com/KudProject/aarch64-linux-android-4.9.git --depth=1 "${KERNELDIR}/gcc"
         git clone https://github.com/arter97/arm32-gcc --depth=1 "${KERNELDIR}/gcc32"
         COMPILER_STRING='GCC 4.9.x'
 	COMPILER_TYPE='GCC4.9.x'
+fi
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
 
