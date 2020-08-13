@@ -31,6 +31,9 @@ CI_CHANNEL=-1001488385343
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
+# Clang is annoying
+PATH="${KERNELDIR}/clang/bin:${PATH}"
+
 # Kernel revision
 KERNELTYPE=HMP
 KERNELRELEASE=platina
@@ -71,10 +74,12 @@ makekernel() {
     rm -rf ${ANYKERNEL}
     git clone https://github.com/PREDATOR-project/AnyKernel3.git -b Phiton-newcam anykernel3
     kernelstringfix
-    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-linux-android-"
-    export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     make O=out ARCH=arm64 ${DEFCONFIG}
-    make -j$(nproc --all) O=out ARCH=arm64
+    if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
+        make -j$(nproc --all) CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- O=out ARCH=arm64
+    else
+	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
+    fi
 
     # Check if compilation is done successfully.
     if ! [ -f "${OUTFILE}" ]; then
