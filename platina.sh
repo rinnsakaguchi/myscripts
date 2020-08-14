@@ -31,9 +31,6 @@ CI_CHANNEL=-1001488385343
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
-# Clang is annoying
-PATH="${KERNELDIR}/clang/bin:${PATH}"
-
 # Kernel revision
 KERNELTYPE=HMP
 KERNELRELEASE=platina
@@ -42,7 +39,7 @@ KERNELRELEASE=platina
 setversioning() {
 
     # For staging branch
-    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-OC-stable-${BUILD_DATE}"
+    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
