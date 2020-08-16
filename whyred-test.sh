@@ -11,9 +11,9 @@ export TELEGRAM_TOKEN=1272228481:AAG91jVp52QLnAV1krBqcenQKiLXxFUc8g8
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=PREDATOR
-DEFCONFIG=X00T_defconfig
-DEVICE=X00T
+KERNEL=perf+
+DEFCONFIG=predator_defconfig
+DEVICE=whyred
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
@@ -21,28 +21,23 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
 export KBUILD_BUILD_USER=builder
-export KBUILD_BUILD_HOST=PREDATOR
+export KBUILD_BUILD_HOST=CircleCI
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
-CI_CHANNEL=-1001418824983
+CI_CHANNEL=-1001488385343
 
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
-# Clang is annoying
-PATH="${KERNELDIR}/clang/bin:${PATH}"
-
 # Kernel revision
-KERNELTYPE=HMP
-KERNELRELEASE=X00T
+KERNELRELEASE=whyred
 
 # Function to replace defconfig versioning
 setversioning() {
-
-    # For staging branch
-    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-nightly-${BUILD_DATE}"
+        # For staging branch
+            KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-OldCam-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
@@ -72,14 +67,12 @@ kernelstringfix() {
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BULDOSER-X00T-EAS anykernel3
+    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
+    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-"
+    export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     make O=out ARCH=arm64 ${DEFCONFIG}
-    if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
-        make -j$(nproc --all) CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- O=out ARCH=arm64
-    else
-	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
-    fi
+    make -j$(nproc --all) O=out ARCH=arm64
 
     # Check if compilation is done successfully.
     if ! [ -f "${OUTFILE}" ]; then
@@ -111,9 +104,39 @@ shipkernel() {
     cd ..
 }
 
+# Ship China firmware builds
+setnewcam() {
+    export CAMLIBS=NewCam
+    # Pick DSP change
+    sed -i 's/CONFIG_XIAOMI_NEW_CAMERA_BLOBS=n/CONFIG_XIAOMI_NEW_CAMERA_BLOBS=y/g' arch/arm64/configs/${DEFCONFIG}
+    echo -e "Newcam ready"
+}
+
+# Ship China firmware builds
+clearout() {
+    # Pick DSP change
+    rm -rf out
+    mkdir -p out
+}
+
+#Setver 2 for newcam
+setver2() {
+    KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-NewCam-${BUILD_DATE}"
+    export KERNELTYPE KERNELNAME
+    export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
+    export ZIPNAME="${KERNELNAME}.zip"
+}
+
+# Fix for CI builds running out of memory
+fixcilto() {
+    sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/g' arch/arm64/configs/${DEFCONFIG}
+    sed -i 's/CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y/# CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is not set/g' arch/arm64/configs/${DEFCONFIG}
+}
+
 ## Start the kernel buildflow ##
 setversioning
-tg_channelcast "<b>$CIRCLE_BUILD_NUM CI Build Triggered</b>" \
+fixcilto
+tg_channelcast "<b>CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
 	"Device: ${DEVICE}" \
 	"Kernel: <code>${KERNEL}, ${KERNELRELEASE}</code>" \
@@ -122,6 +145,10 @@ tg_channelcast "<b>$CIRCLE_BUILD_NUM CI Build Triggered</b>" \
 	"Commit point: <code>${COMMIT_POINT}</code>" \
 	"Clocked at: <code>$(date +%Y%m%d-%H%M)</code>"
 START=$(date +"%s")
+makekernel || exit 1
+shipkernel
+setnewcam
+setver2
 makekernel || exit 1
 shipkernel
 END=$(date +"%s")
