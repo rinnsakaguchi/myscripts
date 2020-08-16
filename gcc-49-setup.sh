@@ -14,9 +14,9 @@ KERNELDIR="$(pwd)"
 SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
 
-git clone https://github.com/rokibhasansagar/linaro-toolchain-latest.git -b latest-4 --depth=1 "${KERNELDIR}/gcc"
-git clone https://github.com/KudProject/arm-linux-androideabi-4.9.git --depth=1 "${KERNELDIR}/gcc32"
-        COMPILER_STRING='Linaro 4.9.4'
+git clone https://github.com/kdrag0n/aarch64-elf-gcc.git --depth=1 "${KERNELDIR}/gcc"
+git clone https://github.com/kdrag0n/arm-eabi-gcc.git --depth=1 "${KERNELDIR}/gcc32"
+        COMPILER_STRING='GCC 9.2.0'
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
 
