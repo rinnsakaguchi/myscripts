@@ -14,9 +14,9 @@ KERNELDIR="$(pwd)"
 SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
 
-git clone https://github.com/KudProject/aarch64-linux-android-4.9.git --depth=1 "${KERNELDIR}/gcc"
+git clone https://github.com/ktommy91/aarch64-buildroot-linux-musl.git --depth=1 "${KERNELDIR}/gcc"
 git clone https://github.com/KudProject/arm-linux-androideabi-4.9.git --depth=1 "${KERNELDIR}/gcc32"
-        COMPILER_STRING='GCC 4.9'
+        COMPILER_STRING='GCC 8.3.0'
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
 
