@@ -21,7 +21,7 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
 export KBUILD_BUILD_USER=builder
-export KBUILD_BUILD_HOST=mi-server
+export KBUILD_BUILD_HOST=android
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
