@@ -12,7 +12,7 @@ export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
 KERNEL=android-10
-DEFCONFIG=whyred-perf_defconfig
+DEFCONFIG=whyred_defconfig
 DEVICE=whyred
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
