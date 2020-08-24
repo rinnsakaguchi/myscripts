@@ -20,7 +20,7 @@ PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
-export KBUILD_BUILD_USER=build
+export KBUILD_BUILD_USER=builder
 export KBUILD_BUILD_HOST=android
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
@@ -30,9 +30,6 @@ CI_CHANNEL=-1001488385343
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
-
-# Clang is annoying
-PATH="${KERNELDIR}/clang/bin:${KERNELDIR}/gcc/bin:${KERNELDIR}/gcc32/bin:${PATH}"
 
 # Kernel revision
 KERNELRELEASE=whyred
@@ -72,17 +69,10 @@ makekernel() {
     rm -rf ${ANYKERNEL}
     git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
+    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-linux-android-"
+    export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-linux-androideabi-"
     make O=out ARCH=arm64 ${DEFCONFIG}
-    if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
-        make -j$(nproc --all) O=out \
-                              ARCH=arm64 \
-                              CC=clang \
-                              CLANG_TRIPLE=aarch64-linux-gnu- \
-                              CROSS_COMPILE=aarch64-linux-android- \
-                              CROSS_COMPILE_ARM32=arm-linux-androideabi-
-    else
-	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
-    fi
+    make -j$(nproc --all) O=out ARCH=arm64
 
     # Check if compilation is done successfully.
     if ! [ -f "${OUTFILE}" ]; then
@@ -145,6 +135,7 @@ fixcilto() {
 
 ## Start the kernel buildflow ##
 setversioning
+fixcilto
 tg_channelcast "<b>CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
 	"Device: ${DEVICE}" \
