@@ -12,6 +12,7 @@ export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
 KERNEL=PREDATOR
+MODEL=Redmi Note 5 Pro
 DEFCONFIG=predator_defconfig
 DEVICE=whyred
 CIPROVIDER=CircleCI
@@ -138,6 +139,7 @@ setversioning
 fixcilto
 tg_channelcast "<b>CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
+        "Model: ${MODEL}" \
 	"Device: ${DEVICE}" \
 	"Kernel: <code>${KERNEL}, ${KERNELRELEASE}</code>" \
 	"Linux Version: <code>$(make kernelversion)</code>" \
