@@ -1,4 +1,4 @@
-#!#!/usr/bin/env bash
+#!/usr/bin/env bash
 # Copyright (C) 2019-2020 Jago Gardiner (nysascape)
 #
 # Licensed under the Raphielscape Public License, Version 1.d (the "License");
@@ -69,7 +69,7 @@ kernelstringfix() {
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BULDOSER-X00T-EAS anykernel3
+    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b tulip anykernel3
     kernelstringfix
     export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-linux-android-"
     export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-linux-androideabi-"
