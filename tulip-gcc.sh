@@ -11,7 +11,7 @@ export TELEGRAM_TOKEN=1272228481:AAG91jVp52QLnAV1krBqcenQKiLXxFUc8g8
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=android-10
+KERNEL=PREDATOR
 DEFCONFIG=tulip_defconfig
 DEVICE=whyred
 CIPROVIDER=CircleCI
@@ -32,7 +32,7 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Kernel revision
-KERNELRELEASE=whyred
+KERNELRELEASE=TULIP
 
 # Function to replace defconfig versioning
 setversioning() {
