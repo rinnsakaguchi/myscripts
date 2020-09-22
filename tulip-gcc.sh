@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!#!/usr/bin/env bash
 # Copyright (C) 2019-2020 Jago Gardiner (nysascape)
 #
 # Licensed under the Raphielscape Public License, Version 1.d (the "License");
@@ -13,15 +13,15 @@ export ANYKERNEL=$(pwd)/anykernel3
 # Avoid hardcoding things
 KERNEL=PREDATOR
 DEFCONFIG=tulip_defconfig
-DEVICE=whyred
+DEVICE=tulip
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
-export KBUILD_BUILD_USER=builder
-export KBUILD_BUILD_HOST=android
+export KBUILD_BUILD_USER=iqbal
+export KBUILD_BUILD_HOST=Predator
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
@@ -32,12 +32,14 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Kernel revision
-KERNELRELEASE=TULIP
+KERNELTYPE=
+KERNELRELEASE=tulip
 
 # Function to replace defconfig versioning
 setversioning() {
-        # For staging branch
-            KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-OldCam-${BUILD_DATE}"
+
+    # For staging branch
+    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-beta-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
@@ -67,10 +69,10 @@ kernelstringfix() {
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b tulip anykernel3
+    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BULDOSER-X00T-EAS anykernel3
     kernelstringfix
-    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-linux-android-"
-    export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-linux-androideabi-"
+    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-linux-"
+    export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     make O=out ARCH=arm64 ${DEFCONFIG}
     make -j$(nproc --all) O=out ARCH=arm64
 
@@ -104,29 +106,6 @@ shipkernel() {
     cd ..
 }
 
-# Ship China firmware builds
-setnewcam() {
-    export CAMLIBS=NewCam
-    # Pick DSP change
-    sed -i 's/CONFIG_XIAOMI_NEW_CAMERA_BLOBS=n/CONFIG_XIAOMI_NEW_CAMERA_BLOBS=y/g' arch/arm64/configs/${DEFCONFIG}
-    echo -e "Newcam ready"
-}
-
-# Ship China firmware builds
-clearout() {
-    # Pick DSP change
-    rm -rf out
-    mkdir -p out
-}
-
-#Setver 2 for newcam
-setver2() {
-    KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-NewCam-${BUILD_DATE}"
-    export KERNELTYPE KERNELNAME
-    export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
-    export ZIPNAME="${KERNELNAME}.zip"
-}
-
 # Fix for CI builds running out of memory
 fixcilto() {
     sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/g' arch/arm64/configs/${DEFCONFIG}
@@ -145,10 +124,6 @@ tg_channelcast "<b>CI Build Triggered</b>" \
 	"Commit point: <code>${COMMIT_POINT}</code>" \
 	"Clocked at: <code>$(date +%Y%m%d-%H%M)</code>"
 START=$(date +"%s")
-makekernel || exit 1
-shipkernel
-setnewcam
-setver2
 makekernel || exit 1
 shipkernel
 END=$(date +"%s")
