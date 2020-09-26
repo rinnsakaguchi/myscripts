@@ -10,12 +10,10 @@
 export TELEGRAM_TOKEN=1272228481:AAG91jVp52QLnAV1krBqcenQKiLXxFUc8g8
 export ANYKERNEL=$(pwd)/anykernel3
 
-# Device name
-MODEL=Redmi Note 5 Pro
-
 # Avoid hardcoding things
 KERNEL=PREDATOR
 DEFCONFIG=predator_defconfig
+MODEL=Redmi Note 5
 DEVICE=whyred
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
