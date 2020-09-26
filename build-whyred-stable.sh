@@ -31,8 +31,8 @@ export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 CI_CHANNEL=-1001488385343
 
 # Set default local datetime
-DATE=$(TZ=Asia/Jakarta date +"%m%d-%T")
-BUILD_DATE=$(TZ=Asia/Jakarta date +"%m%d-%H%M")
+DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
+BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Kernel revision
 KERNELRELEASE=whyred
