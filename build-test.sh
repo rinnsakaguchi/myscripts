@@ -347,12 +347,12 @@ build_kernel1() {
 		tg_post_msg "<b>$KBUILD_BUILD_VERSION CI Build Triggered</b>%0A<b>Docker OS: </b><code>$DISTRO</code>%0A<b>Kernel Version : </b><code>$KERVER</code>%0A<b>Date : </b><code>$(TZ=Asia/Jakarta date)</code>%0A<b>Device : </b><code>$MODEL1 [$DEVICE1]</code>%0A<b>Manufacture : </b><code>$MANUFACTUREINFO</code>%0A<b>Pipeline Host : </b><code>$KBUILD_BUILD_HOST</code>%0A<b>Host Core Count : </b><code>$PROCS</code>%0A<b>Compiler Used : </b><code>$KBUILD_COMPILER_STRING</code>%0a<b>Branch : </b><code>$CI_BRANCH</code>%0A<b>Last Commit : </b><code>$COMMIT_HEAD</code>%0A" "$CHATID"
 	fi
 
-	make O=out $DEFCONFIG1
+	make O=out $DEFCONFIG
 	if [ $DEF_REG = 1 ]
 	then
-		cp .config arch/arm64/configs/$DEFCONFIG1
-		git add arch/arm64/configs/$DEFCONFIG1
-		git commit -m "$DEFCONFIG1: Regenerate
+		cp .config arch/arm64/configs/$DEFCONFIG
+		git add arch/arm64/configs/$DEFCONFIG
+		git commit -m "$DEFCONFIG: Regenerate
 
 						This is an auto-generated commit"
 	fi
@@ -407,7 +407,7 @@ build_kernel1() {
 # Function to replace defconfig versioning
 setversioning1() {
     # For staging branch
-    KERNELNAME1="$KERNEL-$DEVICE1-$KERNELTYPE-$TYPE-$VERSION1-oldcam-$DATE"
+    KERNELNAME1="$KERNEL-$DEVICE-$KERNELTYPE-$TYPE-$VERSION-oldcam-$DATE"
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME1
     export ZIPNAME1="$KERNELNAME1.zip"
@@ -454,7 +454,7 @@ clearout() {
 
 # Setver 2 for newcam
 setversioning2() {
-	KERNELNAME2="$KERNEL-$DEVICE1-$KERNELTYPE-$TYPE-$VERSION1-newcam-$DATE"
+	KERNELNAME2="$KERNEL-$DEVICE-$KERNELTYPE-$TYPE-$VERSION-newcam-$DATE"
     export KERNELTYPE KERNELNAME2
     export ZIPNAME2="$KERNELNAME2.zip"
 }
