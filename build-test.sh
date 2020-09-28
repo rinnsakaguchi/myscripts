@@ -60,7 +60,7 @@ KERNELRELEASE=stable
 
 # List the kernel version of each device
 VERSION=v2.7 # Tulip device
-VERSION1=v3.1 # Whyred device
+VERSION1=v1.0 # Whyred device
 
 # Show manufacturer info
 MANUFACTURERINFO="XiaoMI, Inc."
@@ -77,7 +77,7 @@ PTTG=1
 	if [ $PTTG = 1 ]
 	then
 		# Set Telegram Chat ID
-		CHATID="-1001401913520"
+		CHATID="-1001488385343"
 	fi
 
 # Generate a full DEFCONFIG prior building. 1 is YES | 0 is NO(default)
@@ -107,10 +107,10 @@ LOG_DEBUG=0
 
 ## Set defaults first
 DISTRO=$(cat /etc/issue)
-KBUILD_BUILD_HOST=DroneCI
+KBUILD_BUILD_HOST=circleCI
 CI_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 export KBUILD_BUILD_HOST CI_BRANCH
-export token="1206672611:AAGYbqxf4SN8f_Zsg3pa6nxOltilb3e8IN0"
+export token="1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0"
 
 ## Check for CI
 if [ -n "$CI" ]
@@ -338,7 +338,8 @@ rm -r "$KERNEL_DIR/out/arch/arm64/boot"
 cloneak() {
 	rm -rf "$KERNEL_DIR/AnyKernel3"
 	msg "|| Cloning Anykernel for whyred ||"
-	git clone --depth 1 https://github.com/fiqri19102002/AnyKernel3.git -b whyred-aosp
+	git clone --depth 1 NYKERNEL}
+    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam
 }
 
 ##------------------------------------------------------------------##
