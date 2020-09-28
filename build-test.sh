@@ -36,30 +36,26 @@ err() {
 KERNEL_DIR=$PWD
 
 # The name of the Kernel, to name the ZIP
-KERNEL="STRIX"
+KERNEL="PREDATOR"
 
 # Kernel zip name type
 TYPE="stable"
 
 # The name of the device for which the kernel is built
-MODEL="Redmi Note 6 Pro"
 MODEL1="Redmi Note 5 Pro"
 
 # The codename of the device
-DEVICE="tulip"
 DEVICE1="whyred"
 
 # The defconfig which should be used. Get it from config.gz from
 # your device or check source
-DEFCONFIG=tulip_defconfig
-DEFCONFIG1=whyred_defconfig
+DEFCONFIG=whyred_defconfig
 
 # Kernel revision
 KERNELTYPE=EAS
 KERNELRELEASE=stable
 
 # List the kernel version of each device
-VERSION=v2.7 # Tulip device
 VERSION1=v1.0 # Whyred device
 
 # Show manufacturer info
@@ -158,17 +154,12 @@ clone() {
 		git clone --depth=1 https://github.com/arter97/arm32-gcc.git gcc32
 		GCC64_DIR=$KERNEL_DIR/gcc64
 		GCC32_DIR=$KERNEL_DIR/gcc32
-	fi
-
-	msg "|| Cloning Anykernel for tulip ||"
-	git clone --depth 1 https://github.com/fiqri19102002/AnyKernel3.git -b tulip-aosp-10
-
 }
 
 ##------------------------------------------------------##
 
 exports() {
-	export KBUILD_BUILD_USER="FiqriArdyansyah"
+	export KBUILD_BUILD_USER="iqbal"
 	export ARCH=arm64
 	export SUBARCH=arm64
 
