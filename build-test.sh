@@ -56,6 +56,7 @@ tg_channelcast() {
 			echo "${POST}"
 		done
     )"
+}
 tg_post_build() {
 	#Post MD5Checksum alongwith for easeness
 	MD5CHECK=$(md5sum "$1" | cut -d' ' -f1)
