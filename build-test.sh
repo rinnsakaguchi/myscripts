@@ -56,7 +56,6 @@ tg_channelcast() {
 			echo "${POST}"
 		done
     )"
-}
 tg_post_build() {
 	#Post MD5Checksum alongwith for easeness
 	MD5CHECK=$(md5sum "$1" | cut -d' ' -f1)
@@ -83,8 +82,9 @@ makekernel() {
     rm -rf ${ANYKERNEL}
     git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
-    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-"
-    export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
+    kernelstringfix
+    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-linux-android-"
+    export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-linux-androideabi-"
     make O=out ARCH=arm64 ${DEFCONFIG}
     make -j$(nproc --all) O=out ARCH=arm64
 
