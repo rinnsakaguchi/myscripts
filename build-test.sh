@@ -57,6 +57,17 @@ tg_channelcast() {
 		done
     )"
 }
+tg_post_build() {
+	#Post MD5Checksum alongwith for easeness
+	MD5CHECK=$(md5sum "$1" | cut -d' ' -f1)
+
+	#Show the Checksum alongwith caption
+	curl --progress-bar -F document=@"$1" "$BOT_BUILD_URL" \
+	-F chat_id="$2"  \
+	-F "disable_web_page_preview=true" \
+	-F "parse_mode=html" \
+	-F caption="$3 | <b>MD5 Checksum : </b><code>$MD5CHECK</code>"  
+}
 
 # Fix long kernel strings
 kernelstringfix() {
@@ -84,17 +95,6 @@ makekernel() {
 	    echo -e "Kernel compilation failed, See buildlog to fix errors"
 	    tg_channelcast "Build for ${DEVICE} <b>failed</b> in $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)! Check ${CIPROVIDER} for errors!"
 	    exit 1
-     }
-     tg_post_build() {
-	#Post MD5Checksum alongwith for easeness
-	MD5CHECK=$(md5sum "$1" | cut -d' ' -f1)
-
-	#Show the Checksum alongwith caption
-	curl --progress-bar -F document=@"$1" "$BOT_BUILD_URL" \
-	-F chat_id="$2"  \
-	-F "disable_web_page_preview=true" \
-	-F "parse_mode=html" \
-	-F caption="$3 | <b>MD5 Checksum : </b><code>$MD5CHECK</code>"   
     fi
 }
 
