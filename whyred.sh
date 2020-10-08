@@ -72,12 +72,14 @@ kernelstringfix() {
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BULDOSER-X00T-EAS anykernel3
+    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
-    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-"
-    export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     make O=out ARCH=arm64 ${DEFCONFIG}
-    make -j$(nproc --all) O=out ARCH=arm64
+    if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
+        make -j$(nproc --all) CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- O=out ARCH=arm64
+    else
+	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
+    fi
 
     # Check if compilation is done successfully.
     if ! [ -f "${OUTFILE}" ]; then
