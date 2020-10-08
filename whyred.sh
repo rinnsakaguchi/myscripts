@@ -13,7 +13,7 @@ export ANYKERNEL=$(pwd)/anykernel3
 # Avoid hardcoding things
 KERNEL=PREDATOR
 DEFCONFIG=whyred_defconfig
-DEVICE=X00T
+DEVICE=whyred
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
