@@ -20,34 +20,29 @@ PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
-export ARCH=arm64
-export SUBARCH=arm64
-export KBUILD_COMPILER_STRING
-export KBUILD_BUILD_USER=root
-export KBUILD_BUILD_HOST=LocalHost
+export KBUILD_BUILD_USER=iqbal
+export KBUILD_BUILD_HOST=Predator
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
 
-# Kernel & Clang Setup
-CLANG_DIR="$KERNEL_DIR/clang"
-export PATH="$KERNEL_DIR/clang/bin:$PATH"
-KBUILD_COMPILER_STRING="$("$CLANG_DIR"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')"
-
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
+# Clang is annoying
+PATH="${KERNELDIR}/clang/bin:${PATH}"
+
 # Kernel revision
 KERNELTYPE=EAS
-KERNELRELEASE=WHYRED
+KERNELRELEASE=whyred
 
 # Function to replace defconfig versioning
 setversioning() {
 
     # For staging branch
-    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-stable-${BUILD_DATE}"
+    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
@@ -79,16 +74,12 @@ makekernel() {
     rm -rf ${ANYKERNEL}
     git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
-    make O=out $KERNEL_DEFCONFIG
-    make -j"$(nproc --all)" O=out \
-        CC=clang \
-        AR=llvm-ar \
-        NM=llvm-nm \
-        OBJCOPY=llvm-objcopy \
-        OBJDUMP=llvm-objdump \
-        STRIP=llvm-strip \
-        CROSS_COMPILE=aarch64-linux-gnu- \
-        CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+    make O=out ARCH=arm64 ${DEFCONFIG}
+    if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
+        make -j$(nproc --all) CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- O=out ARCH=arm64
+    else
+	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
+    fi
 
     # Check if compilation is done successfully.
     if ! [ -f "${OUTFILE}" ]; then
@@ -120,16 +111,9 @@ shipkernel() {
     cd ..
 }
 
-# Fix for CI builds running out of memory
-fixcilto() {
-    sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/g' arch/arm64/configs/${DEFCONFIG}
-    sed -i 's/CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y/# CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is not set/g' arch/arm64/configs/${DEFCONFIG}
-}
-
 ## Start the kernel buildflow ##
 setversioning
-fixcilto
-tg_channelcast "<b>CI Build Triggered</b>" \
+tg_channelcast "<b>$CIRCLE_BUILD_NUM CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
 	"Device: ${DEVICE}" \
 	"Kernel: <code>${KERNEL}, ${KERNELRELEASE}</code>" \
