@@ -41,7 +41,7 @@ setversioning() {
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
-    export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
+    export TEMPZIPNAME="${KERNELNAME}.zip"
     export ZIPNAME="${KERNELNAME}.zip"
 }
 
@@ -93,11 +93,6 @@ shipkernel() {
     cd "${ANYKERNEL}" || exit
     zip -r9 "${TEMPZIPNAME}" *
 
-    # Sign the zip before sending it to Telegram
-    msg "|| Signing zip ||"
-    curl -sLo zipsigner-3.0.jar https://raw.githubusercontent.com/baalajimaestro/AnyKernel2/master/zipsigner-3.0.jar
-    java -jar zipsigner-3.0.jar ${TEMPZIPNAME} ${ZIPNAME}
-
     # Ship it to the CI channel
     "${TELEGRAM}" -f "$ZIPNAME" -c "${CI_CHANNEL}"
 
@@ -124,7 +119,7 @@ clearout() {
 setver2() {
     KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-NewCam-${BUILD_DATE}"
     export KERNELTYPE KERNELNAME
-    export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
+    export TEMPZIPNAME="${KERNELNAME}.zip"
     export ZIPNAME="${KERNELNAME}.zip"
 }
 
