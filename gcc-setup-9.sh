@@ -14,9 +14,9 @@ KERNELDIR="$(pwd)"
 SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
 
-git clone https://github.com/Haseo97/aarch64-elf-gcc.git --depth=1 "${KERNELDIR}/gcc"
-git clone https://github.com/arter97/arm32-gcc.git --depth=1 "${KERNELDIR}/gcc32"
-        COMPILER_STRING='GCC 9.1.0'
+git clone https://github.com/arter97/arm64-gcc.git -b master --depth=3 "${KERNELDIR}/gcc"
+git clone https://github.com/arter97/arm32-gcc.git -b master --depth=3 "${KERNELDIR}/gcc32"
+        COMPILER_STRING='GCC'
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
 
