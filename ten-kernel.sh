@@ -27,11 +27,6 @@ export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 # Kernel groups
 CI_CHANNEL=-1001488385343
 
-# Kernel & Clang Setup
-CLANG_DIR="$KERNEL_DIR/clang"
-export PATH="$KERNEL_DIR/clang/bin:$PATH"
-KBUILD_COMPILER_STRING="$("$CLANG_DIR"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')"
-
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
@@ -79,15 +74,8 @@ makekernel() {
     rm -rf ${ANYKERNEL}
     git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
-    make -j"$(nproc --all)" O=out ARCH=arm64 ${DEFCONFIG} \
-          CC=clang \
-          AR=llvm-ar \
-          NM=llvm-nm \
-          OBJCOPY=llvm-objcopy \
-          OBJDUMP=llvm-objdump \
-          STRIP=llvm-strip \
-          CROSS_COMPILE=aarch64-linux-gnu- \
-          CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+    make O=out ARCH=arm64 ${DEFCONFIG}
+        make -j$(nproc --all) CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- O=out ARCH=arm64
 
     # Check if compilation is done successfully.
     if ! [ -f "${OUTFILE}" ]; then
