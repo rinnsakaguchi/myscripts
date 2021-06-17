@@ -79,7 +79,7 @@ makekernel() {
     rm -rf ${ANYKERNEL}
     git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
-    make -j"$(nproc --all)" O=out ${DEFCONFIG} \
+    make -j"$(nproc --all)" O=out ARCH=arm64 ${DEFCONFIG} \
           CC=clang \
           AR=llvm-ar \
           NM=llvm-nm \
