@@ -27,6 +27,11 @@ export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 # Kernel groups
 CI_CHANNEL=-1001488385343
 
+# Kernel & Clang Setup
+CLANG_DIR="$KERNEL_DIR/clang"
+export PATH="$KERNEL_DIR/clang/bin:$PATH"
+KBUILD_COMPILER_STRING="$("$CLANG_DIR"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')"
+
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
