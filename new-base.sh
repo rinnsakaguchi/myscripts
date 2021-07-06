@@ -11,7 +11,7 @@ export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=PREDATOR
+KERNEL=STOCK-A11
 DEFCONFIG=predator_defconfig
 MODEL=Redmi Note 5
 DEVICE=whyred
