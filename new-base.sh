@@ -12,7 +12,7 @@ export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
 KERNEL=STOCK-A11
-DEFCONFIG=predator_defconfig
+DEFCONFIG=whyred_defconfig
 MODEL=Redmi Note 5
 DEVICE=whyred
 CIPROVIDER=CircleCI
