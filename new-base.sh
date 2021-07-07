@@ -25,6 +25,9 @@ export KBUILD_BUILD_USER=CircleCI
 export KBUILD_BUILD_HOST=CPU-v12
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
+# Export LD PATH
+export LD_LIBRARY_PATH="${KERNELDIR}/clang/bin/../lib:$PATH"
+
 # Kernel groups
 CI_CHANNEL=-1001488385343
 
