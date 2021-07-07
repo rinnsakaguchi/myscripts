@@ -11,9 +11,8 @@ export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=STOCK-A11
+KERNEL=android-11
 DEFCONFIG=whyred_defconfig
-MODEL=Redmi Note 5
 DEVICE=whyred
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -22,11 +21,8 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
 export KBUILD_BUILD_USER=CircleCI
-export KBUILD_BUILD_HOST=CPU-v12
+export KBUILD_BUILD_HOST=whyred
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
-
-# Export LD PATH
-export LD_LIBRARY_PATH="${KERNELDIR}/clang/bin/../lib:$PATH"
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
@@ -35,16 +31,13 @@ CI_CHANNEL=-1001488385343
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
-# Clang is annoying
-PATH="${KERNELDIR}/clang/bin:${PATH}"
-
 # Kernel revision
 KERNELRELEASE=whyred
 
 # Function to replace defconfig versioning
 setversioning() {
         # For staging branch
-            KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-OldCam-${BUILD_DATE}"
+            KERNELNAME="${KERNEL}-${KERNELRELEASE}-OldCam-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
@@ -76,12 +69,10 @@ makekernel() {
     rm -rf ${ANYKERNEL}
     git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
+    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-linux-android-"
+    export CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-linux-androideabi-"
     make O=out ARCH=arm64 ${DEFCONFIG}
-    if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
-        make -j$(nproc) O=out ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi-
-    else
-	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
-    fi
+    make -j$(nproc --all) O=out ARCH=arm64
 
     # Check if compilation is done successfully.
     if ! [ -f "${OUTFILE}" ]; then
@@ -126,17 +117,23 @@ clearout() {
 
 #Setver 2 for newcam
 setver2() {
-    KERNELNAME="${KERNEL}-${KERNELRELEASE}-EAS-NewCam-${BUILD_DATE}"
+    KERNELNAME="${KERNEL}-${KERNELRELEASE}-NewCam-${BUILD_DATE}"
     export KERNELTYPE KERNELNAME
     export TEMPZIPNAME="${KERNELNAME}.zip"
     export ZIPNAME="${KERNELNAME}.zip"
 }
 
+# Fix for CI builds running out of memory
+fixcilto() {
+    sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/g' arch/arm64/configs/${DEFCONFIG}
+    sed -i 's/CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y/# CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is not set/g' arch/arm64/configs/${DEFCONFIG}
+}
+
 ## Start the kernel buildflow ##
 setversioning
+fixcilto
 tg_channelcast "<b>CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
-        "Model: ${MODEL}" \
 	"Device: ${DEVICE}" \
 	"Kernel: <code>${KERNEL}, ${KERNELRELEASE}</code>" \
 	"Linux Version: <code>$(make kernelversion)</code>" \
