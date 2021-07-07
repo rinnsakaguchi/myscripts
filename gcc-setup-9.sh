@@ -15,7 +15,7 @@ SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
 
 git clone https://github.com/kdrag0n/aarch64-elf-gcc --depth=1 "${KERNELDIR}/gcc"
-git clone https://github.com/arter97/arm32-gcc.git --depth=1 "${KERNELDIR}/gcc32"
+git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
         COMPILER_STRING='GCC9'
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
