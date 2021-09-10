@@ -11,7 +11,7 @@ export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=android-11-4.19
+KERNEL=Whyred-4.19
 DEFCONFIG=vendor/whyred_defconfig
 DEVICE=whyred
 CIPROVIDER=CircleCI
@@ -21,7 +21,7 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
 export KBUILD_BUILD_USER=iqbal
-export KBUILD_BUILD_HOST=predator
+export KBUILD_BUILD_HOST=CircleCI
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 
 # Kernel groups
@@ -35,12 +35,14 @@ BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 PATH="${KERNELDIR}/clang/bin:${PATH}"
 
 # Kernel revision
+KERNELTYPE=EAS
 KERNELRELEASE=whyred
 
 # Function to replace defconfig versioning
 setversioning() {
-        # For staging branch
-            KERNELNAME="${KERNEL}-${KERNELRELEASE}-OldCam-${BUILD_DATE}"
+
+    # For staging branch
+    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
@@ -105,39 +107,9 @@ shipkernel() {
     cd ..
 }
 
-# Ship China firmware builds
-setnewcam() {
-    export CAMLIBS=NewCam
-    # Pick DSP change
-    sed -i 's/CONFIG_XIAOMI_NEW_CAMERA_BLOBS=n/CONFIG_XIAOMI_NEW_CAMERA_BLOBS=y/g' arch/arm64/configs/${DEFCONFIG}
-    echo -e "Newcam ready"
-}
-
-# Ship China firmware builds
-clearout() {
-    # Pick DSP change
-    rm -rf out
-    mkdir -p out
-}
-
-#Setver 2 for newcam
-setver2() {
-    KERNELNAME="${KERNEL}-${KERNELRELEASE}-NewCam-${BUILD_DATE}"
-    export KERNELTYPE KERNELNAME
-    export TEMPZIPNAME="${KERNELNAME}.zip"
-    export ZIPNAME="${KERNELNAME}.zip"
-}
-
-# Fix for CI builds running out of memory
-fixcilto() {
-    sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/g' arch/arm64/configs/${DEFCONFIG}
-    sed -i 's/CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y/# CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is not set/g' arch/arm64/configs/${DEFCONFIG}
-}
-
 ## Start the kernel buildflow ##
 setversioning
-fixcilto
-tg_channelcast "<b>CI Build Triggered</b>" \
+tg_channelcast "<b>$CIRCLE_BUILD_NUM CI Build Triggered</b>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
 	"Device: ${DEVICE}" \
 	"Kernel: <code>${KERNEL}, ${KERNELRELEASE}</code>" \
@@ -146,10 +118,6 @@ tg_channelcast "<b>CI Build Triggered</b>" \
 	"Commit point: <code>${COMMIT_POINT}</code>" \
 	"Clocked at: <code>$(date +%Y%m%d-%H%M)</code>"
 START=$(date +"%s")
-makekernel || exit 1
-shipkernel
-setnewcam
-setver2
 makekernel || exit 1
 shipkernel
 END=$(date +"%s")
