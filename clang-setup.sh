@@ -21,10 +21,10 @@ if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
 	COMPILER_TYPE='Predator-clang'
 else
         # Default to GCC from Arter
-        git clone https://github.com/mvaisakh/gcc-arm64 -b gcc-master --depth=1 "${KERNELDIR}/gcc"
+        git clone https://github.com/xiangfeidexiaohuo/GCC-4.9 -b gcc4.9 --depth=1 "${KERNELDIR}/gcc"
         git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
-        COMPILER_STRING='GCC 12.x'
-	COMPILER_TYPE='GCC12.x'
+        COMPILER_STRING='GCC 4.9'
+	COMPILER_TYPE='GCC4.9'
 fi
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
