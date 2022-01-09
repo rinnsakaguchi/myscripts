@@ -18,13 +18,13 @@ COMPILER_TYPES=gcc
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         git clone --depth=1 https://gitlab.com/predator112/predator_clang.git -b clang "${KERNELDIR}"/clang
-	COMPILER_TYPE='Predator-clang'
+	COMPILER_TYPE='Predator clang'
 else
         # Default to GCC from Arter
-        git clone https://github.com/xiangfeidexiaohuo/GCC-4.9 -b gcc4.9 --depth=1 "${KERNELDIR}/gcc"
+        git clone https://github.com/arter97/aarch64-none-elf-5.3 --depth=1 "${KERNELDIR}/gcc"
         git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
-        COMPILER_STRING='GCC 4.9'
-	COMPILER_TYPE='GCC4.9'
+        COMPILER_STRING='GCC 5.3'
+	COMPILER_TYPE='GCC5.3'
 fi
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
