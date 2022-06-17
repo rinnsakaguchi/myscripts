@@ -13,7 +13,7 @@
 KERNELDIR="$(pwd)"
 SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
-COMPILER_TYPES=clang
+COMPILER_TYPES=gcc
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
@@ -22,10 +22,10 @@ if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         COMPILER_TYPE='Predator clang'
 else
         # Default to GCC from Arter
-        git clone https://github.com/friedrich420/aarch64-sabermod-7.0 --depth=1 "${KERNELDIR}/gcc"
+        git clone https://github.com/ktommy91/aarch64-buildroot-linux-musl --depth=1 "${KERNELDIR}/gcc"
         git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
-        COMPILER_STRING='GCC 7.0 sabermod'
-	COMPILER_TYPE='GCC 7.0 sabermod'
+        COMPILER_STRING='GCC 8.3'
+	COMPILER_TYPE='GCC 8.3'
 fi
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
