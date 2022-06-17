@@ -21,7 +21,7 @@ if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
 	COMPILER_TYPE='Predator clang'
 else
         # Default to GCC from Arter
-        git clone https://github.com/friedrich420/aarch64-sabermod-7.0 -b gcc-master --depth=1 "${KERNELDIR}/gcc"
+        git clone https://github.com/friedrich420/aarch64-sabermod-7.0 --depth=1 "${KERNELDIR}/gcc"
         git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
         COMPILER_STRING='GCC 7.0 sabermod'
 	COMPILER_TYPE='GCC 7.0 sabermod'
