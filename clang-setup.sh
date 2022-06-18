@@ -22,8 +22,8 @@ if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         COMPILER_TYPE='Predator clang'
 else
         # Default to GCC from Arter
-        git clone https://github.com/greenforce-project/gcc-arm64 -b main --depth=1 "${KERNELDIR}/gcc"
-        git clone https://github.com/greenforce-project/gcc-arm32 -b main --depth=1 "${KERNELDIR}/gcc32"
+        git clone https://github.com/mvaisakh/gcc-arm64 -b gcc-master --depth=1 "${KERNELDIR}/gcc"
+        git clone https://github.com/mvaisakh/gcc-arm -b gcc-master --depth=1 "${KERNELDIR}/gcc32"
         COMPILER_STRING='GCC 13.x'
 	COMPILER_TYPE='GCC 13.x'
 fi
