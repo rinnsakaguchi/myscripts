@@ -21,6 +21,7 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
+export KBUILD_BUILD_HOST=Termux
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
