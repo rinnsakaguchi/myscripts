@@ -14,7 +14,7 @@ KERNELDIR="$(pwd)"
 SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
 
-git clone https://github.com/KudProject/aarch64-linux-android-4.9.git --depth=1 "${KERNELDIR}/gcc"
+git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 -b lineage-19.1 --depth=1 "${KERNELDIR}/gcc"
 git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
         COMPILER_STRING='GCC 4.9'
 
