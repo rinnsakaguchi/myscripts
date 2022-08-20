@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+ini#!/usr/bin/env bash
 #
 # Copyright (C) 2019 nysascape
 #
@@ -22,10 +22,10 @@ if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         COMPILER_TYPE='Predator clang'
 else
         # Default to GCC from Arter
-        git clone https://github.com/fiqri19102002/aarch64-gcc -b elf-gcc-master --depth=1 "${KERNELDIR}/gcc"
+        git clone https://github.com/kdrag0n/aarch64-elf-gcc -b 9.x --depth=1 "${KERNELDIR}/gcc"
         git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
-        COMPILER_STRING='GCC 10.x'
-	COMPILER_TYPE='GCC 10.x'
+        COMPILER_STRING='GCC 9.x'
+	COMPILER_TYPE='GCC 9.x'
 fi
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
