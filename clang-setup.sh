@@ -1,4 +1,4 @@
-ini#!/usr/bin/env bash
+#!/usr/bin/env bash
 #
 # Copyright (C) 2019 nysascape
 #
