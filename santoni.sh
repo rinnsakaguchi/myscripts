@@ -71,11 +71,7 @@ makekernel() {
     rm -rf ${ANYKERNEL}
     git clone https://github.com/land-ten/AnyKernel3.git anykernel3
     kernelstringfix
-    export CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-"
-    export CROSS_COMPILE_ARM32="${https://github.com/land-ten/AnyKernel3/edit/master-santoni-msm-3.18-googlexx/anykernel.sh}/gcc32/bin/arm-eabi-"
-    make O=out ARCH=arm64 ${DEFCONFIG}
-    make -j$(nproc --all) O=out ARCH=arm64
-
+    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     # Check if compilation is done successfully.
     if ! [ -f "${OUTFILE}" ]; then
 	    END=$(date +"%s")
