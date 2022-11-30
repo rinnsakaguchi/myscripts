@@ -11,7 +11,7 @@ export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=pure
+KERNEL=perf
 DEFCONFIG=santoni_defconfig
 DEVICE=santoni
 CIPROVIDER=CircleCI
@@ -20,9 +20,8 @@ PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
-export KBUILD_BUILD_USER=laptop
-export KBUILD_BUILD_HOST=iqbal
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
+export KBUILD_BUILD_HOST=Termux
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
@@ -31,19 +30,20 @@ CI_CHANNEL=-1001488385343
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
+# Clang is annoying
+PATH="${KERNELDIR}/clang/bin:${PATH}"
+
 # Kernel revision
-KERNELTYPE=eas
 KERNELRELEASE=santoni
 
 # Function to replace defconfig versioning
 setversioning() {
-
-    # For staging branch
-    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-stable-${BUILD_DATE}"
+        # For staging branch
+            KERNELNAME="${KERNEL}-${KERNELRELEASE}-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
-    export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
+    export TEMPZIPNAME="${KERNELNAME}.zip"
     export ZIPNAME="${KERNELNAME}.zip"
 }
 
@@ -69,7 +69,7 @@ kernelstringfix() {
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    git clone https://github.com/land-ten/AnyKernel3.git anykernel3
+    git clone https://github.com/PREDATOR-project/AnyKernel3.git -b BangBroz-oldcam anykernel3
     kernelstringfix
     make O=out ARCH=arm64 ${DEFCONFIG}
     if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
@@ -122,6 +122,8 @@ tg_channelcast "<b>CI Build Triggered</b>" \
 	"Commit point: <code>${COMMIT_POINT}</code>" \
 	"Clocked at: <code>$(date +%Y%m%d-%H%M)</code>"
 START=$(date +"%s")
+makekernel || exit 1
+shipkernel
 makekernel || exit 1
 shipkernel
 END=$(date +"%s")
