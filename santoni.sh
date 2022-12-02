@@ -11,8 +11,8 @@ export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=perf
-DEFCONFIG=santoni_defconfig
+KERNEL=perf-caf-9-10
+DEFCONFIG=santoni_treble_defconfig
 DEVICE=santoni
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -39,7 +39,7 @@ KERNELRELEASE=santoni
 # Function to replace defconfig versioning
 setversioning() {
         # For staging branch
-            KERNELNAME="${KERNEL}-${KERNELRELEASE}-${BUILD_DATE}"
+            KERNELNAME="${KERNEL}-${KERNELRELEASE}-treble-${BUILD_DATE}"
 
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
