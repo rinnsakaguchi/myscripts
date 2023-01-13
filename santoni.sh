@@ -69,7 +69,7 @@ kernelstringfix() {
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    git clone https://github.com/land-ten/AnyKernel3.git anykernel3
+    git clone https://github.com/11-whyred-new/AnyKernel3 -b master anykernel3
     kernelstringfix
     make O=out ARCH=arm64 ${DEFCONFIG}
     if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
