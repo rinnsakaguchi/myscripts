@@ -20,7 +20,9 @@ PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
-export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz
+export kernel=${OUTDIR}/arch/arm64/boot/Image.gz
+export dtb=${OUTDIR}/arch/arm64/boot/dts/qcom/sdmmagpie.dtb
+export dtbo=${OUTDIR}/arch/arm64/boot/dtbo.img
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
@@ -88,7 +90,8 @@ makekernel() {
 # Ship the compiled kernel
 shipkernel() {
     # Copy compiled kernel
-    cp "${OUTDIR}"/arch/arm64/boot/Image.gz "${ANYKERNEL}"/
+    cp $kernel $dtbo AnyKernel3
+    cp $dtb AnyKernel3/dtb
 
     # Zip the kernel, or fail
     cd "${ANYKERNEL}" || exit
