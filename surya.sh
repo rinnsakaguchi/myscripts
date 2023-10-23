@@ -37,9 +37,9 @@ BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 # Function to replace defconfig versioning
 setversioning() {
 
-    # For staging branch
-    KERNELNAME="${KERNEL}-${KERNELTYPE}-${KERNELRELEASE}-stable-${BUILD_DATE}"
-
+# For staging branch
+            KERNELNAME="${KERNEL}-${KERNELRELEASE}-${BUILD_DATE}"
+	    
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
     export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
