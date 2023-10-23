@@ -21,8 +21,6 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz
-export OUTFILE=${OUTDIR}/arch/arm64/boot/dts/qcom/dtb
-export OUTFILE=${OUTDIR}/arch/arm64/boot/dtbo.img
 export KBUILD_BUILD_HOST=Termux
 
 # Kernel groups
@@ -92,9 +90,7 @@ makekernel() {
 shipkernel() {
     # Copy compiled kernel
     cp "${OUTDIR}"/arch/arm64/boot/Image.gz "${ANYKERNEL}"/
-    cp "${OUTDIR}"/arch/arm64/boot/dts/qcom/dtb "${ANYKERNEL}"/
-    cp "${OUTDIR}"arch/arm64/boot/dtbo.img "${ANYKERNEL}"/
-
+   
     # Zip the kernel, or fail
     cd "${ANYKERNEL}" || exit
     zip -r9 "${TEMPZIPNAME}" *
