@@ -21,7 +21,7 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
 export kernel=${OUTDIR}/arch/arm64/boot/Image.gz
-export dtb=${OUTDIR}/arch/arm64/boot/dts/qcom/sdmmagpie.dtb
+export dtb=${OUTDIR}/arch/arm64/boot/dts/qcom/dtb
 export dtbo=${OUTDIR}/arch/arm64/boot/dtbo.img
 
 # Kernel groups
@@ -90,8 +90,9 @@ makekernel() {
 # Ship the compiled kernel
 shipkernel() {
     # Copy compiled kernel
-    cp $kernel $dtbo AnyKernel3
-    cp $dtb AnyKernel3/dtb
+    cp "${OUTDIR}"/arch/arm64/boot/Image.gz "${ANYKERNEL}"/
+    cp "${OUTDIR}"/arch/arm64/boot/dts/qcom/dtb "${ANYKERNEL}"/
+    cp "${OUTDIR}"arch/arm64/boot/dtbo.img "${ANYKERNEL}"/
 
     # Zip the kernel, or fail
     cd "${ANYKERNEL}" || exit
