@@ -20,7 +20,7 @@ PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
-export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
+export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz
 export KBUILD_BUILD_HOST=CircleCI
 
 # Kernel groups
@@ -89,7 +89,7 @@ makekernel() {
 # Ship the compiled kernel
 shipkernel() {
     # Copy compiled kernel
-    cp "${OUTDIR}"/arch/arm64/boot/Image.gz-dtb "${ANYKERNEL}"/
+    cp "${OUTDIR}"/arch/arm64/boot/Image.gz "${ANYKERNEL}"/
    
     # Zip the kernel, or fail
     cd "${ANYKERNEL}" || exit
