@@ -11,7 +11,7 @@ export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=Perf+
+KERNEL=Perf
 DEFCONFIG=surya_defconfig
 DEVICE=surya
 CIPROVIDER=CircleCI
@@ -20,8 +20,8 @@ PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
-export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz
-export KBUILD_BUILD_HOST=Termux
+export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
+export KBUILD_BUILD_HOST=CircleCI
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
@@ -89,7 +89,7 @@ makekernel() {
 # Ship the compiled kernel
 shipkernel() {
     # Copy compiled kernel
-    cp "${OUTDIR}"/arch/arm64/boot/Image.gz "${ANYKERNEL}"/
+    cp "${OUTDIR}"/arch/arm64/boot/Image.gz-dtb "${ANYKERNEL}"/
    
     # Zip the kernel, or fail
     cd "${ANYKERNEL}" || exit
