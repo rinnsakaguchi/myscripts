@@ -22,10 +22,10 @@ if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         COMPILER_TYPE='Predator clang'
 else
         # Default to GCC from Arter
-        git clone https://github.com/rokibhasansagar/linaro-toolchain-latest -b latest-5 --depth=1 "${KERNELDIR}/gcc"
+        git clone https://github.com/rokibhasansagar/linaro-toolchain-latest -b latest-7 --depth=1 "${KERNELDIR}/gcc"
         git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
-        COMPILER_STRING='GCC LINARO 5.x'
-	COMPILER_TYPE='GCC LINARO 5.x'
+        COMPILER_STRING='GCC LINARO 7.x'
+	COMPILER_TYPE='GCC LINARO 7.x'
 fi
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
