@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+ini#!/usr/bin/env bash
 #
 # Copyright (C) 2019 nysascape
 #
@@ -13,7 +13,7 @@
 KERNELDIR="$(pwd)"
 SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
-COMPILER_TYPES=clang
+COMPILER_TYPES=gcc
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
@@ -22,10 +22,10 @@ if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         COMPILER_TYPE='Predator clang'
 else
         # Default to GCC from Arter
-        git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 -b lineage-19.1 --depth=1 "${KERNELDIR}/gcc"
+        git clone git clone https://github.com/mvaisakh/gcc-arm64 -b gcc-master --depth=1 "${KERNELDIR}/gcc"
         git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
-        COMPILER_STRING='GCC 9.x'
-	COMPILER_TYPE='GCC 9.x'
+        COMPILER_STRING='GCC'
+	COMPILER_TYPE='GCC'
 fi
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
