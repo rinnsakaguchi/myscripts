@@ -21,7 +21,8 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
-export KBUILD_BUILD_HOST=iqbal-Rembang-Jateng🇮🇩
+export KBUILD_BUILD_USER=Builder
+export KBUILD_BUILD_HOST=محمد اقبال
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
