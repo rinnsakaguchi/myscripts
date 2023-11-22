@@ -22,6 +22,9 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
 export KBUILD_BUILD_HOST=Build-kernel
+export CLANG_PATH=${KERNELDIR}/clang/clang-r498229b
+export PATH=${CLANG_PATH}/bin:${PATH}
+export ARCH=arm64
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
@@ -74,7 +77,18 @@ makekernel() {
     kernelstringfix
     make O=out ARCH=arm64 ${DEFCONFIG}
     if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
-        make -j$(nproc) O=out ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+        make -j$(nproc --all) \
+	O=out \
+	CC="${ccache_} clang" \
+	AS=llvm-as \
+	LD=ld.lld \
+	AR=llvm-ar \
+	NM=llvm-nm \
+	STRIP=llvm-strip \
+	OBJCOPY=llvm-objcopy \
+	OBJDUMP=llvm-objdump \
+	CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-none-linux-gnu-" \
+	CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-none-linux-gnueabihf-" \ 
     else
 	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     fi
