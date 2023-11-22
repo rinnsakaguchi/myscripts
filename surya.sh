@@ -36,6 +36,7 @@ BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Clang is annoying
 PATH="${KERNELDIR}/clang/clang-r498229b/bin:${KERNELDIR}/gcc/bin:${KERNELDIR}/gcc32/bin:${PATH}"
+export LD_LIBRARY_PATH="${KERNELDIR}/clang/bin/../lib:$PATH"
 
 # Function to replace defconfig versioning
 setversioning() {
@@ -79,8 +80,8 @@ makekernel() {
                               ARCH=arm64 \
                               CC=clang \
                               CLANG_TRIPLE=aarch64-linux-gnu- \
-                              CROSS_COMPILE=aarch64-linux-android- \
-                              CROSS_COMPILE_ARM32=arm-linux-androideabi-
+                              CROSS_COMPILE=aarch64-elf- \
+                              CROSS_COMPILE_ARM32=arm-eabi-
     else
 	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     fi
