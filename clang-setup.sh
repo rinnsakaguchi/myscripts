@@ -18,6 +18,8 @@ COMPILER_TYPES=clang
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         git clone https://gitlab.com/fadlyas07/clang-llvm -b main --depth=1 "${KERNELDIR}"/clang
+	git clone https://github.com/Kyvangka1610/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu --depth=1 "${KERNELDIR}/gcc32"
+        git clone https://github.com/Kyvangka1610/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu --depth=1 "${KERNELDIR}/gcc"
 	COMPILER_STRING='greenforce clang 18.0'
         COMPILER_TYPE='greenforce clang 18.0'
 else
@@ -26,7 +28,7 @@ else
         git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
         COMPILER_STRING='GCC'
 	COMPILER_TYPE='GCC'
-fi
+fi    
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
 
