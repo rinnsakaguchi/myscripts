@@ -18,8 +18,8 @@ COMPILER_TYPES=clang
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         git clone https://github.com/Nicklas373/aosp-clang/ -b r365631c --depth=1  "${KERNELDIR}"/clang
-	git clone https://github.com/KudProject/aarch64-linux-android-4.9.git "${KERNELDIR}"/gcc
-        git clone https://github.com/KudProject/arm-linux-androideabi-4.9.git "${KERNELDIR}"/gcc32
+	git clone https://github.com/mvaisakh/gcc-arm64 -b gcc-master --depth=1  "${KERNELDIR}"/gcc
+        git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1  "${KERNELDIR}"/gcc32
         COMPILER_STRING='google clang'
         COMPILER_TYPE='google clang'
 else
