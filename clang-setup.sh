@@ -18,8 +18,8 @@ COMPILER_TYPES=clang
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         git clone https://github.com/greenforce-project/clang-llvm -b 20230808 --depth=1  "${KERNELDIR}"/clang
-	COMPILER_STRING='predator clang'
-        COMPILER_TYPE='predator clang'
+	COMPILER_STRING='greenforce clang 18.0'
+        COMPILER_TYPE='greenforce clang 18.0'
 else
         # Default to GCC from Arter
         git clone https://github.com/kdrag0n/aarch64-elf-gcc --depth=1 "${KERNELDIR}/gcc"
