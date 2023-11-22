@@ -17,7 +17,7 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        git clone --depth=1 https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b main --depth=1  "${KERNELDIR}"/clang
+        git clone https://github.com/Nicklas373/aosp-clang/ -b r365631c --depth=1  "${KERNELDIR}"/clang
 	git clone https://github.com/KudProject/aarch64-linux-android-4.9.git "${KERNELDIR}"/gcc
         git clone https://github.com/KudProject/arm-linux-androideabi-4.9.git "${KERNELDIR}"/gcc32
         COMPILER_STRING='google clang'
