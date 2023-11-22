@@ -23,8 +23,6 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
 export KBUILD_BUILD_USER=Builder
 export KBUILD_BUILD_HOST=محمد_اقبا
-export CROSS_COMPILE=${KERNELDIR}/gcc/bin/aarch64-elf-
-export CROSS_COMPILE_ARM32=${KERNELDIR}/gcc32/bin/arm-eabi-
 export LD_LIBRARY_PATH="${KERNELDIR}/clang/clang-r498229b/bin/../lib:$PATH"
 
 # Kernel groups
@@ -82,7 +80,7 @@ makekernel() {
                               ARCH=arm64 \
                               CC=clang \
                               CLANG_TRIPLE=aarch64-linux-gnu- \
-                              CROSS_COMPILE=aarch64-elf- \
+                              CROSS_COMPILE=aarch64-elf-ar \
                               CROSS_COMPILE_ARM32=arm-eabi-
     else
 	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
