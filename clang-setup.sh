@@ -17,7 +17,7 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        git clone https://github.com/greenforce-project/clang-llvm -b 20230808 --depth=1  "${KERNELDIR}"/clang
+        git clone https://github.com/greenforce-project/clang-llvm -b main --depth=1  "${KERNELDIR}"/clang
 	COMPILER_STRING='greenforce clang 18.0'
         COMPILER_TYPE='greenforce clang 18.0'
 else
