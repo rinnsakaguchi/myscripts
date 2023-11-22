@@ -35,7 +35,7 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Clang is annoying
-PATH="${KERNELDIR}/clang/bin:${KERNELDIR}/gcc/bin:${KERNELDIR}/gcc32/bin:${PATH}"
+PATH="${KERNELDIR}/clang/clang-r498229b/bin:${KERNELDIR}/gcc/bin:${KERNELDIR}/gcc32/bin:${PATH}"
 
 # Function to replace defconfig versioning
 setversioning() {
