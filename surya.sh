@@ -29,6 +29,9 @@ CI_CHANNEL=-1001488385343
 # Kernel revision
 KERNELRELEASE=surya
 
+# Clang is annoying
+PATH="${KERNELDIR}/clang/bin:${PATH}"
+
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
