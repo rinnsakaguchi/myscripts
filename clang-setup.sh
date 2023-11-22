@@ -13,15 +13,13 @@
 KERNELDIR="$(pwd)"
 SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
-COMPILER_TYPES=gcc
+COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b main --depth=1  "${KERNELDIR}"/clang
-	git clone https://github.com/kdrag0n/aarch64-elf-gcc --depth=1  "${KERNELDIR}"/gcc
-        git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1  "${KERNELDIR}"/gcc32
-        COMPILER_STRING='google clang'
-        COMPILER_TYPE='google clang'
+        git clone --depth=1 https://gitlab.com/predator112/predator_clang.git -b clang  "${KERNELDIR}"/clang
+	COMPILER_STRING='predator clang'
+        COMPILER_TYPE='predator clang'
 else
         # Default to GCC from Arter
         git clone https://github.com/kdrag0n/aarch64-elf-gcc --depth=1 "${KERNELDIR}/gcc"
