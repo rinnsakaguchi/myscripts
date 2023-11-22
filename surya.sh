@@ -25,8 +25,7 @@ export KBUILD_BUILD_USER=Builder
 export KBUILD_BUILD_HOST=محمد_اقبا
 export CROSS_COMPILE=${KERNELDIR}/gcc/bin/aarch64-elf-
 export CROSS_COMPILE_ARM32=${KERNELDIR}/gcc32/bin/arm-eabi-
-
-export LD_LIBRARY_PATH="${KERNELDIR}/clang/bin/../lib:$PATH"
+export LD_LIBRARY_PATH="${KERNELDIR}/clang/clang-r498229b/bin/../lib:$PATH"
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
@@ -39,7 +38,7 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Clang is annoying
-PATH="${KERNELDIR}/clang/bin:${PATH}"
+PATH="${KERNELDIR}/clang/clang-r498229b/bin:${PATH}"
 
 # Function to replace defconfig versioning
 setversioning() {
