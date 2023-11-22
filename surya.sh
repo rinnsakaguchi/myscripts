@@ -22,7 +22,11 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
 export KBUILD_BUILD_USER=Builder
-export KBUILD_BUILD_HOST=محمد_اقبال
+export KBUILD_BUILD_HOST=محمد_اقبا
+export CROSS_COMPILE=${KERNELDIR}/gcc/bin/aarch64-elf-
+export CROSS_COMPILE_ARM32=${KERNELDIR}/gcc32/bin/arm-eabi-
+
+export LD_LIBRARY_PATH="${KERNELDIR}/clang/bin/../lib:$PATH"
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
@@ -35,8 +39,7 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Clang is annoying
-PATH="${KERNELDIR}/clang/clang-r498229b/bin:${KERNELDIR}/gcc/bin:${KERNELDIR}/gcc32/bin:${PATH}"
-export LD_LIBRARY_PATH="${KERNELDIR}/clang/bin/../lib:$PATH"
+PATH="${KERNELDIR}/clang/bin:${PATH}"
 
 # Function to replace defconfig versioning
 setversioning() {
