@@ -23,7 +23,6 @@ COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
 export KBUILD_BUILD_USER=Builder
 export KBUILD_BUILD_HOST=محمد_اقبا
-export LD_LIBRARY_PATH="${KERNELDIR}/clang/clang-r498229b/bin/../lib:$PATH"
 
 # Kernel groups
 CI_CHANNEL=-1001488385343
@@ -34,9 +33,6 @@ KERNELRELEASE=surya
 # Set default local datetime
 DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
-
-# Clang is annoying
-PATH="${KERNELDIR}/clang/clang-r498229b/bin:${PATH}"
 
 # Function to replace defconfig versioning
 setversioning() {
