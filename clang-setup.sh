@@ -17,7 +17,7 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        git clone --depth=1 https://gitlab.com/predator112/predator_clang.git -b clang  "${KERNELDIR}"/clang
+        git clone https://github.com/greenforce-project/clang-llvm -b 20230808 --depth=1  "${KERNELDIR}"/clang
 	COMPILER_STRING='predator clang'
         COMPILER_TYPE='predator clang'
 else
