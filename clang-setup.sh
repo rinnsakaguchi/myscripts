@@ -17,9 +17,11 @@ COMPILER_TYPES=clang
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
-        git clone --depth=1 https://gitlab.com/predator112/predator_clang.git -b clang  "${KERNELDIR}"/clang
-	COMPILER_STRING='predator clang'
-        COMPILER_TYPE='predator clang'
+        git clone --depth=1 https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b clang-r498229b "${KERNELDIR}"/clang
+	git clone https://github.com/KudProject/aarch64-linux-android-4.9.git "${KERNELDIR}"/gcc
+        git clone https://github.com/KudProject/arm-linux-androideabi-4.9.git "${KERNELDIR}"/gcc32
+        COMPILER_STRING='google clang'
+        COMPILER_TYPE='google clang'
 else
         # Default to GCC from Arter
         git clone https://github.com/mvaisakh/gcc-arm64 -b gcc-master --depth=1 "${KERNELDIR}/gcc"
