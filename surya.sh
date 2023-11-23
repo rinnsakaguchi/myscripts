@@ -19,6 +19,12 @@ PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
 
+# Get total RAM
+RAM_INFO=$(free -m)
+TOTAL_RAM=$(echo "$RAM_INFO" | awk '/^Mem:/{print $2}')
+TOTAL_RAM_GB=$(awk "BEGIN {printf \"%.0f\", $TOTAL_RAM/1024}")
+export TOTAL_RAM_GB
+
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
 export KBUILD_BUILD_HOST=Build-kernel
@@ -128,6 +134,7 @@ tg_channelcast "<b>CI Build Triggered</b>" \
 	"Linux Version: <code>$(make kernelversion)</code>" \
 	"Branch: <code>${PARSE_BRANCH}</code>" \
 	"Commit point: <code>${COMMIT_POINT}</code>" \
+        "Host RAM Count : </b><code>${TOTAL_RAM_GB}</code>" \
 	"Clocked at: <code>$(date +%Y%m%d-%H%M)</code>"
 START=$(date +"%s")
 makekernel || exit 1
