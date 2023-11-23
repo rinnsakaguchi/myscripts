@@ -25,6 +25,10 @@ TOTAL_RAM=$(echo "$RAM_INFO" | awk '/^Mem:/{print $2}')
 TOTAL_RAM_GB=$(awk "BEGIN {printf \"%.0f\", $TOTAL_RAM/1024}")
 export TOTAL_RAM_GB
 
+# Get all cores of CPU
+PROCS=$(nproc --all)
+export PROCS
+
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
 export KBUILD_BUILD_HOST=Build-kernel
@@ -135,6 +139,9 @@ tg_channelcast "<b>CI Build Triggered</b>" \
 	"Branch: <code>${PARSE_BRANCH}</code>" \
 	"Commit point: <code>${COMMIT_POINT}</code>" \
         "Host RAM Count: <code>${TOTAL_RAM_GB}</code>" \
+        "Pipeline Host: <code>${KBUILD_BUILD_HOST}</code>" \
+        "Host CPU Name: <code>${CPU_NAME}</code>" \
+        "Host Core Count: <code>${PROCS} core(s)</code>" \
 	"Clocked at: <code>$(date +%Y%m%d-%H%M)</code>"
 START=$(date +"%s")
 makekernel || exit 1
