@@ -134,7 +134,7 @@ tg_channelcast "<b>CI Build Triggered</b>" \
 	"Linux Version: <code>$(make kernelversion)</code>" \
 	"Branch: <code>${PARSE_BRANCH}</code>" \
 	"Commit point: <code>${COMMIT_POINT}</code>" \
-        "Host RAM Count : </b><code>${TOTAL_RAM_GB}</code>" \
+        "Host RAM Count: <code>${TOTAL_RAM_GB}</code>" \
 	"Clocked at: <code>$(date +%Y%m%d-%H%M)</code>"
 START=$(date +"%s")
 makekernel || exit 1
