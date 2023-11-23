@@ -50,9 +50,11 @@ KERNELRELEASE=surya
 # Clang is annoying
 PATH="${KERNELDIR}/clang/bin:${PATH}"
 
-# Set default local datetime
-DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
-BUILD_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
+# Set date and time
+DATE=$(TZ=Asia/Jakarta date)
+
+# Set date and time for zip name
+ZIP_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
 # Function to replace defconfig versioning
 setversioning() {
@@ -139,15 +141,14 @@ setversioning
 tg_channelcast "Docker OS: <code>$DISTRO</code>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
 	"Device: <code>Poco X3 NFC (surya)</code>" \
-	"Kernel: <code>${KERNEL}, ${KERNELRELEASE}</code>" \
 	"Linux Version: <code>$(make kernelversion)</code>" \
+        "Date: <code>$DATE</code>" \
 	"Branch: <code>${PARSE_BRANCH}</code>" \
         "Host RAM Count: <code>${TOTAL_RAM_GB}</code>" \
         "Pipeline Host: <code>${KBUILD_BUILD_HOST}</code>" \
         "Host CPU Name: <code>${CPU_NAME}</code>" \
         "Host Core Count: <code>${PROCS} core(s)</code>" \
-	"Commit point: <code>${COMMIT_POINT}</code>" \
-	"Clocked at: <code>$(date +%Y%m%d-%H%M)</code>"
+	"Commit point: <code>${COMMIT_POINT}</code>"
 START=$(date +"%s")
 makekernel || exit 1
 shipkernel
