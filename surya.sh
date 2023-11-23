@@ -13,7 +13,6 @@ export ANYKERNEL=$(pwd)/anykernel3
 # Avoid hardcoding things
 KERNEL=Perf
 DEFCONFIG=surya_defconfig
-DEVICE=poco x3 nfc
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
@@ -31,6 +30,9 @@ export PROCS
 
 # Get CPU name
 export CPU_NAME="$(lscpu | sed -nr '/Model name/ s/.*:\s*(.*) */\1/p')"
+
+# Get distro name
+DISTRO=$(source /etc/os-release && echo ${NAME})
 
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
@@ -134,9 +136,9 @@ shipkernel() {
 
 ## Start the kernel buildflow ##
 setversioning
-tg_channelcast "<b>CI Build Triggered</b>" \
+tg_channelcast "<b>Docker OS: <code>$DISTRO</code>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
-	"Device: ${DEVICE}" \
+	"Device: <code>Poco X3 NFC (surya)</code>" \
 	"Kernel: <code>${KERNEL}, ${KERNELRELEASE}</code>" \
 	"Linux Version: <code>$(make kernelversion)</code>" \
 	"Branch: <code>${PARSE_BRANCH}</code>" \
@@ -151,4 +153,4 @@ makekernel || exit 1
 shipkernel
 END=$(date +"%s")
 DIFF=$(( END - START ))
-tg_channelcast "Build for ${DEVICE} with ${COMPILER_STRING} <b>succeed</b> took $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)!"
+tg_channelcast "Build for Poco X3 NFC with ${COMPILER_STRING} <b>succeed</b> took $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)!"
