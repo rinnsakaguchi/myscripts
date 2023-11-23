@@ -13,7 +13,7 @@ export ANYKERNEL=$(pwd)/anykernel3
 # Avoid hardcoding things
 KERNEL=Perf
 DEFCONFIG=surya_defconfig
-DEVICE=POCO X3 NFC
+DEVICE=poco x3 nfc
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
@@ -67,7 +67,7 @@ setversioning() {
 # Send to channel
 tg_channelcast() {
     "${TELEGRAM}" -c "${CI_CHANNEL}" -H \
-    "$(
+    "$(2
 		for POST in "${@}"; do
 			echo "${POST}"
 		done
