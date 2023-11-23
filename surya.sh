@@ -136,7 +136,7 @@ shipkernel() {
 
 ## Start the kernel buildflow ##
 setversioning
-tg_channelcast "<b>Docker OS: <code>$DISTRO</code>" \
+tg_channelcast "Docker OS: <code>$DISTRO</code>" \
         "Compiler: <code>${COMPILER_STRING}</code>" \
 	"Device: <code>Poco X3 NFC (surya)</code>" \
 	"Kernel: <code>${KERNEL}, ${KERNELRELEASE}</code>" \
