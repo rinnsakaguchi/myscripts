@@ -13,7 +13,7 @@ export ANYKERNEL=$(pwd)/anykernel3
 # Avoid hardcoding things
 KERNEL=Perf
 DEFCONFIG=surya_defconfig
-DEVICE=surya
+DEVICE=POCO X3 NFC
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
@@ -28,6 +28,9 @@ export TOTAL_RAM_GB
 # Get all cores of CPU
 PROCS=$(nproc --all)
 export PROCS
+
+# Get CPU name
+export CPU_NAME="$(lscpu | sed -nr '/Model name/ s/.*:\s*(.*) */\1/p')"
 
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
@@ -137,11 +140,11 @@ tg_channelcast "<b>CI Build Triggered</b>" \
 	"Kernel: <code>${KERNEL}, ${KERNELRELEASE}</code>" \
 	"Linux Version: <code>$(make kernelversion)</code>" \
 	"Branch: <code>${PARSE_BRANCH}</code>" \
-	"Commit point: <code>${COMMIT_POINT}</code>" \
         "Host RAM Count: <code>${TOTAL_RAM_GB}</code>" \
         "Pipeline Host: <code>${KBUILD_BUILD_HOST}</code>" \
         "Host CPU Name: <code>${CPU_NAME}</code>" \
         "Host Core Count: <code>${PROCS} core(s)</code>" \
+	"Commit point: <code>${COMMIT_POINT}</code>" \
 	"Clocked at: <code>$(date +%Y%m%d-%H%M)</code>"
 START=$(date +"%s")
 makekernel || exit 1
