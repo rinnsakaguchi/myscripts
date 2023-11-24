@@ -60,7 +60,7 @@ ZIP_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 setversioning() {
 
 # For staging branch
-            KERNELNAME="${KERNEL}-${KERNELRELEASE}-${ZIP_DATE}"
+            KERNELNAME="${KERNEL}-${KERNELRELEASE}-KSU-${ZIP_DATE}"
 	    
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
