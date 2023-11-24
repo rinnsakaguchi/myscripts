@@ -36,7 +36,8 @@ DISTRO=$(source /etc/os-release && echo ${NAME})
 
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
-export KBUILD_BUILD_HOST=MohammadIqbal
+export KBUILD_BUILD_USER=builder
+export KBUILD_BUILD_HOST=MohammadIqbal-Rembang-JawaTengah
 export CLANG_PATH=${KERNELDIR}/clang/clang-r498229b
 export PATH=${CLANG_PATH}/bin:${PATH}
 export ARCH=arm64
