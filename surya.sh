@@ -36,7 +36,7 @@ DISTRO=$(source /etc/os-release && echo ${NAME})
 
 # Export custom KBUILD
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image
-export KBUILD_BUILD_HOST=Build-kernel
+export KBUILD_BUILD_HOST=MohammadIqbal
 export CLANG_PATH=${KERNELDIR}/clang/clang-r498229b
 export PATH=${CLANG_PATH}/bin:${PATH}
 export ARCH=arm64
@@ -104,8 +104,8 @@ makekernel() {
 	STRIP=llvm-strip \
 	OBJCOPY=llvm-objcopy \
 	OBJDUMP=llvm-objdump \
-	CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" \
-	CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
+	CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-none-linux-gnu-" \
+	CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-none-linux-gnueabihf-"
     else
 	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     fi
