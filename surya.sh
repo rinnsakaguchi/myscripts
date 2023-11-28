@@ -11,7 +11,7 @@ export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=Perf
+KERNEL=𝐏𝐫𝐞𝐝𝐚𝐭𝐨𝐑
 DEFCONFIG=surya_defconfig
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
