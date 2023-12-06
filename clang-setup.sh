@@ -13,7 +13,7 @@
 KERNELDIR="$(pwd)"
 SCRIPTS=${KERNELDIR}/kernelscripts
 OUTDIR=${KERNELDIR}/out
-COMPILER_TYPES=clang
+COMPILER_TYPES=gcc
 
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
@@ -24,7 +24,7 @@ if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         COMPILER_TYPE='google clang 17.0.4'
 else
         # Default to GCC from Arter
-        git clone https://github.com/kdrag0n/aarch64-elf-gcc --depth=1 "${KERNELDIR}/gcc"
+        git clone https://github.com/mvaisakh/gcc-arm64 -b gcc-master --depth=1 "${KERNELDIR}/gcc"
         git clone https://github.com/kdrag0n/arm-eabi-gcc --depth=1 "${KERNELDIR}/gcc32"
         COMPILER_STRING='GCC'
 	COMPILER_TYPE='GCC'
