@@ -142,7 +142,7 @@ shipkernel() {
 }
 
 # Ship China firmware builds
-setnewcam() {
+setksu() {
     export KSU=KSU
     # Pick DSP change
     sed -i 's/CONFIG_KSU=n/CONFIG_KSU=y/g' arch/arm64/configs/${DEFCONFIG}
