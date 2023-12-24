@@ -63,7 +63,7 @@ ZIP_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 setversioning() {
 
 # For staging branch
-            KERNELNAME="${KERNEL}-${KERNELRELEASE}-KSU-${ZIP_DATE}"
+            KERNELNAME="${KERNEL}-${KERNELRELEASE}-NON-KSU-${ZIP_DATE}"
 	    
     # Export our new localversion and zipnames
     export KERNELTYPE KERNELNAME
@@ -141,6 +141,29 @@ shipkernel() {
     cd ..
 }
 
+# Ship China firmware builds
+setnewcam() {
+    export KSU=KSU
+    # Pick DSP change
+    sed -i 's/CONFIG_KSU=n/CONFIG_KSU=y/g' arch/arm64/configs/${DEFCONFIG}
+    echo -e "KSU ready"
+}
+
+# Ship China firmware builds
+clearout() {
+    # Pick DSP change
+    rm -rf out
+    mkdir -p out
+}
+
+#Setver 2 for ksu
+setver2() {
+    KERNELNAME="${KERNEL}-${KERNELRELEASE}-KSU-${ZIP_DATE}"
+    export KERNELTYPE KERNELNAME
+    export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
+    export ZIPNAME="${KERNELNAME}.zip"
+}
+
 ## Start the kernel buildflow ##
 setversioning
 tg_channelcast "Docker OS: <code>$DISTRO</code>" \
@@ -155,6 +178,10 @@ tg_channelcast "Docker OS: <code>$DISTRO</code>" \
         "Host Core Count: <code>${PROCS} core(s)</code>" \
 	"Commit point: <code>${COMMIT_POINT}</code>"
 START=$(date +"%s")
+makekernel || exit 1
+shipkernel
+setksu
+setver2
 makekernel || exit 1
 shipkernel
 END=$(date +"%s")
