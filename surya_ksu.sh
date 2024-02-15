@@ -11,7 +11,7 @@ export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=𝐏𝐫𝐞𝐝𝐚𝐭𝐨𝐑
+KERNEL=Perf
 DEFCONFIG=surya_defconfig
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -38,8 +38,8 @@ DISTRO=$(source /etc/os-release && echo ${NAME})
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 export OUTFILE=${OUTDIR}/arch/arm64/boot/dtb.img
 export OUTFILE=${OUTDIR}/arch/arm64/boot/dtbo.img
-export KBUILD_BUILD_USER=builder
-export KBUILD_BUILD_HOST=MohammadIqbal-Rembang-JawaTengah
+export KBUILD_BUILD_USER=IqbaL
+export KBUILD_BUILD_HOST=NajlA
 export CLANG_PATH=${KERNELDIR}/clang/clang-r498229b
 export PATH=${CLANG_PATH}/bin:${PATH}
 export ARCH=arm64
