@@ -18,10 +18,10 @@ COMPILER_TYPES=clang
 # Pick your poison
 if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
         git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b main --depth=1  "${KERNELDIR}/clang"
-	git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 -b lineage-19.1 --depth=1 "${KERNELDIR}/gcc"
-        git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 -b lineage-19.1 --depth=1 "${KERNELDIR}/gcc32"
-	COMPILER_STRING='google clang 17.0.4 & gcc4.9'
-        COMPILER_TYPE='google clang 17.0.4 & gcc4.9'
+	git clone https://github.com/Kyvangka1610/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu --depth=1 "${KERNELDIR}/gcc"
+        git clone https://github.com/Kyvangka1610/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf --depth=1 "${KERNELDIR}/gcc32"
+	COMPILER_STRING='google clang 17.0.4'
+        COMPILER_TYPE='google clang 17.0.4'
 else
         # Default to GCC from Arter
         git clone https://github.com/mvaisakh/gcc-arm64 -b gcc-master --depth=1 "${KERNELDIR}/gcc"
