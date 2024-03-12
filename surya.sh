@@ -40,7 +40,7 @@ export OUTFILE=${OUTDIR}/arch/arm64/boot/dtb.img
 export OUTFILE=${OUTDIR}/arch/arm64/boot/dtbo.img
 export KBUILD_BUILD_USER=IqbAl
 export KBUILD_BUILD_HOST=NajLa
-export CLANG_PATH=${KERNELDIR}/clang/clang-r498229b
+export CLANG_PATH=${KERNELDIR}/clang/clang-r510928
 export PATH=${CLANG_PATH}/bin:${PATH}
 export ARCH=arm64
 export DATE=$(TZ=Asia/Jakarta date)
@@ -51,7 +51,7 @@ CI_CHANNEL=-1001488385343
 KERNELRELEASE=surya
 
 # Clang is annoying
-PATH="${KERNELDIR}/clang/clang-r498229b/bin:${PATH}"
+PATH="${KERNELDIR}/clang/clang-r510928/bin:${PATH}"
 
 # Set date and time
 DATE=$(TZ=Asia/Jakarta date)
