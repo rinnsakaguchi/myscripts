@@ -42,6 +42,7 @@ export KBUILD_BUILD_USER=IqbaL
 export KBUILD_BUILD_HOST=NajlA
 export CLANG_PATH=${KERNELDIR}/clang/clang-r498229b
 export PATH=${CLANG_PATH}/bin:${PATH}
+export CC=clang
 export ARCH=arm64
 export DATE=$(TZ=Asia/Jakarta date)
 # Kernel groups
@@ -51,7 +52,7 @@ CI_CHANNEL=-1001488385343
 KERNELRELEASE=surya
 
 # Clang is annoying
-PATH="${KERNELDIR}/clang/clang-r498229b/bin:${PATH}"
+PATH="${KERNELDIR}/clang/clang-r498229b/bin:${KERNELDIR}/gcc/bin:${PATH}"
 
 # Set date and time
 DATE=$(TZ=Asia/Jakarta date)
