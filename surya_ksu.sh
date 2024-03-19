@@ -98,6 +98,7 @@ makekernel() {
     kernelstringfix
     make O=out ARCH=arm64 ${DEFCONFIG}
     if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
+        PATH="${KERNELDIR}/clang/clang-r498229b/bin:${KERNELDIR}/gcc/bin:${PATH}" \
         make -j$(nproc --all) \
 	O=out \
 	CC="${ccache_} clang" \
