@@ -107,6 +107,7 @@ makekernel() {
 	STRIP=llvm-strip \
 	OBJCOPY=llvm-objcopy \
 	OBJDUMP=llvm-objdump \
+        CLANG_TRIPLE=aarch64-linux-gnu- \
 	CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-linux-android-" \
 	CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-linux-androideabi-"
     else
