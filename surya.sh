@@ -35,7 +35,7 @@ export CPU_NAME="$(lscpu | sed -nr '/Model name/ s/.*:\s*(.*) */\1/p')"
 DISTRO=$(source /etc/os-release && echo ${NAME})
 
 # Export custom KBUILD
-export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
+export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz
 export OUTFILE=${OUTDIR}/arch/arm64/boot/dtb.img
 export OUTFILE=${OUTDIR}/arch/arm64/boot/dtbo.img
 export KBUILD_BUILD_USER=IqbAl
@@ -126,7 +126,7 @@ makekernel() {
 # Ship the compiled kernel
 shipkernel() {
     # Copy compiled kernel
-    cp "${OUTDIR}"/arch/arm64/boot/Image.gz-dtb "${ANYKERNEL}"/
+    cp "${OUTDIR}"/arch/arm64/boot/Image.gz "${ANYKERNEL}"/
     cp "${OUTDIR}"/arch/arm64/boot/dtb.img "${ANYKERNEL}"/
     cp "${OUTDIR}"/arch/arm64/boot/dtbo.img "${ANYKERNEL}"/
    
