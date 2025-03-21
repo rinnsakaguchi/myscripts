@@ -7,11 +7,11 @@
 # CI build script
 
 # Needed exports
-export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
+export TELEGRAM_TOKEN=7485743487:AAEKPw9ubSKZKit9BDHfNJSTWcWax4STUZs
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=PERF-STABLE
+KERNEL=Perf+
 DEFCONFIG=surya_defconfig
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -44,7 +44,7 @@ export PATH=${CLANG_PATH}/bin:${PATH}
 export ARCH=arm64
 export DATE=$(TZ=Asia/Jakarta date)
 # Kernel groups
-CI_CHANNEL=-1001488385343
+CI_CHANNEL=-1002354747626
 
 # Kernel revision
 KERNELRELEASE=surya
@@ -82,8 +82,8 @@ tg_channelcast() {
 
 # Fix long kernel strings
 kernelstringfix() {
-    git config --global user.name "predator112"
-    git config --global user.email "mi460334@gmail.com"
+    git config --global user.name "mahirooo24"
+    git config --global user.email "hiroo24km@gmail.com"
     git add .
     git commit -m "stop adding dirty"
 }
