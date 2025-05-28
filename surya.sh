@@ -4,7 +4,7 @@
 # All rights reserved.
 
 # Init
-LOCAL_DIR=${PWD}/
+LOCAL_DIR=/home/runner/work/kernel_surya/
 KERNEL_DIR="${PWD}"
 cd "$KERNEL_DIR" || exit
 DTB_TYPE="" # define as "single" if want use single file
