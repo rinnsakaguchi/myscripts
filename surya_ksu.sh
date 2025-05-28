@@ -7,16 +7,17 @@
 # CI build script
 
 # Needed exports
-export TELEGRAM_TOKEN=7485743487:AAEKPw9ubSKZKit9BDHfNJSTWcWax4STUZs
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
 KERNEL=Hyper
 DEFCONFIG=surya_ksu_defconfig
-CIPROVIDER=CircleCI
+CIPROVIDER=Github
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
+CHEAD="$(git rev-parse --short HEAD)"
+LATEST_COMMIT="[$COMMIT_POINT](https://github.com/rinnsakaguchi/kernel_surya/commit/$CHEAD)"
 
 # Get total RAM
 RAM_INFO=$(free -m)
@@ -44,8 +45,9 @@ export CLANG_PATH=${KERNELDIR}/clang/clang-r498229b
 export PATH=${CLANG_PATH}/bin:${PATH}
 export ARCH=arm64
 export DATE=$(TZ=Asia/Jakarta date)
-# Kernel groups
-CI_CHANNEL=-1002354747626
+# Telegram
+CHATID="-1002354747626" # Group/channel chatid (use rose/userbot to get it)
+TELEGRAM_TOKEN="7485743487:AAEKPw9ubSKZKit9BDHfNJSTWcWax4STUZs"
 
 # Kernel revision
 KERNELRELEASE=surya
@@ -71,22 +73,68 @@ setversioning() {
     export ZIPNAME="${KERNELNAME}.zip"
 }
 
-# Send to channel
-tg_channelcast() {
-    "${TELEGRAM}" -c "${CI_CHANNEL}" -H \
-    "$(2
+# Export Telegram.sh
+TELEGRAM_FOLDER="${HOME}"/telegram
+if ! [ -d "${TELEGRAM_FOLDER}" ]; then
+    git clone https://github.com/fabianonline/telegram.sh/ "${TELEGRAM_FOLDER}"
+fi
+
+TELEGRAM="${TELEGRAM_FOLDER}"/telegram
+tg_cast() {
+	curl -s -X POST https://api.telegram.org/bot"$TELEGRAM_TOKEN"/sendMessage -d disable_web_page_preview="true" -d chat_id="$CHATID" -d "parse_mode=MARKDOWN" -d text="$(
 		for POST in "${@}"; do
 			echo "${POST}"
 		done
+	)" &> /dev/null
+}
+tg_ship() {
+    "${TELEGRAM}" -f "${ZIPNAME}" -t "${TELEGRAM_TOKEN}" -c "${CHATID}" -H \
+    "$(
+                for POST in "${@}"; do
+                        echo "${POST}"
+                done
+    )"
+}
+tg_fail() {
+    "${TELEGRAM}" -f "${LOGS}" -t "${TELEGRAM_TOKEN}" -c "${CHATID}" -H \
+    "$(
+                for POST in "${@}"; do
+                        echo "${POST}"
+                done
     )"
 }
 
-# Fix long kernel strings
-kernelstringfix() {
-    git config --global user.name "mahirooo"
-    git config --global user.email "mahiroo@revert.com"
-    git add .
-    git commit -m "stop adding dirty"
+# Patch Defconfig
+patch_config() {
+    sed -i "s/${KERNELTYPE}/${KERNELTYPE}-TEST/g" "${KERNEL_DIR}/arch/arm64/configs/${DEFCONFIG}"
+    sed -i 's/CONFIG_THINLTO=y/CONFIG_THINLTO=n/g' arch/arm64/configs/"${DEFCONFIG}"
+    sed -i 's/# CONFIG_LOCALVERSION_AUTO is not set/CONFIG_LOCALVERSION_AUTO=y/g' arch/arm64/configs/"${DEFCONFIG}"
+    sed -i 's/# CONFIG_LOCALVERSION_BRANCH_SHA is not set/CONFIG_LOCALVERSION_AUTO=y/g' arch/arm64/configs/"${DEFCONFIG}"
+}
+
+# Costumize
+patch_config
+versioning
+KERNEL="Predator:[Akane]"
+DEVICE="Surya"
+KERNELNAME="${KERNEL}-${DEVICE}-${KERNELTYPE}-$(date +%y%m%d-%H%M)"
+TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
+ZIPNAME="${KERNELNAME}.zip"
+
+# Regenerating Defconfig
+regenerate() {
+    cp out/.config arch/arm64/configs/"${DEFCONFIG}"
+    git add arch/arm64/configs/"${DEFCONFIG}"
+    git commit -m "defconfig: Regenerate"
+}
+
+# Build Failed
+build_failed() {
+	    END=$(date +"%s")
+	    DIFF=$(( END - START ))
+	    echo -e "Kernel compilation failed, See buildlog to fix errors"
+	    tg_fail "Build for ${DEVICE} <b>failed</b> in $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)!"
+	    exit 1
 }
 
 # Make the kernel
@@ -135,55 +183,35 @@ shipkernel() {
     zip -r9 "${TEMPZIPNAME}" *
 
     # Ship it to the CI channel
-    "${TELEGRAM}" -f "$ZIPNAME" -c "${CI_CHANNEL}"
-
-    # Go back for any extra builds
-    cd ..
+    tg_ship "<b>-------- $DRONE_BUILD_NUMBER Build Succeed --------</b>" \
+            "" \
+            "<b>Device:</b> ${DEVICE}" \
+            "<b>Version:</b> ${KERNELTYPE}" \
+            "<b>Commit Head:</b> ${CHEAD}" \
+            "<b>Time elapsed:</b> $((DIFF / 60)):$((DIFF % 60))" \
+            "" \
+            "Leave a comment below if encountered any bugs!"
 }
 
-# Ship China firmware builds
-setksu() {
-    export KSU=KSU
-    # Pick DSP change
-    sed -i 's/CONFIG_KSU=n/CONFIG_KSU=y/g' arch/arm64/configs/${DEFCONFIG}
-    echo -e "KSU ready"
-}
-
-# Ship China firmware builds
-clearout() {
-    # Pick DSP change
-    rm -rf out
-    mkdir -p out
-}
-
-#Setver 2 for ksu
-setver2() {
-    KERNELNAME="${KERNEL}-${KERNELRELEASE}-KSU-${ZIP_DATE}"
-    export KERNELTYPE KERNELNAME
-    export TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
-    export ZIPNAME="${KERNELNAME}.zip"
-}
-
-## Start the kernel buildflow ##
-setversioning
-tg_channelcast "Docker OS: <code>$DISTRO</code>" \
-        "Compiler: <code>${COMPILER_STRING}</code>" \
-	"Device: <code>Poco X3 NFC (surya)</code>" \
-	"Linux Version: <code>$(make kernelversion)</code>" \
-        "Date: <code>$DATE</code>" \
-	"Branch: <code>${PARSE_BRANCH}</code>" \
-        "Host RAM Count: <code>${TOTAL_RAM_GB}</code>" \
-        "Pipeline Host: <code>${KBUILD_BUILD_HOST}</code>" \
-        "Host CPU Name: <code>${CPU_NAME}</code>" \
-        "Host Core Count: <code>${PROCS} core(s)</code>" \
-	"Commit point: <code>${COMMIT_POINT}</code>"
+# Starting
+NOW=$(date +%d/%m/%Y-%H:%M)
 START=$(date +"%s")
-makekernel || exit 1
-shipkernel
-setksu
-setver2
-makekernel || exit 1
-shipkernel
-END=$(date +"%s")
-DIFF=$(( END - START ))
-tg_channelcast "Build for Poco X3 NFC with ${COMPILER_STRING} <b>succeed</b> took $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)!"
+tg_cast "*$DRONE_BUILD_NUMBER CI Build Triggered*" \
+	"Compiling with *$(nproc --all)* CPUs" \
+	"-----------------------------------------" \
+	"*Compiler:* ${CSTRING}" \
+	"*Device:* ${DEVICE}" \
+	"*Kernel:* ${KERNEL}" \
+	"*Version:* ${KERNELTYPE}" \
+	"*Linux Version:* $(make kernelversion)" \
+	"*Pipeline Host:* <code>${KBUILD_BUILD_HOST}</code>" \
+    "*Host CPU Name:* <code>${CPU_NAME}</code>" \
+    "*Host Core Count:* <code>${PROCS} core(s)</code>" \
+	"*Branch:* ${DRONE_BRANCH}" \
+	"*Clocked at:* ${NOW}" \
+	"*Latest commit:* ${LATEST_COMMIT}" \
+ 	"------------------------------------------" \
+	"${LOGS_URL}"
+
+makekernel
+
