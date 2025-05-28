@@ -44,7 +44,7 @@ fi
 
 # Defconfig
 DEFCONFIG="surya_defconfig"
-REGENERATE_DEFCONFIG="" # unset if don't want to regenerate defconfig
+REGENERATE_DEFCONFIG="surya_defconfig" # unset if don't want to regenerate defconfig
 
 # Telegram
 CHATID="-1002354747626" # Group/channel chatid (use rose/userbot to get it)
@@ -81,25 +81,8 @@ tg_fail() {
     )"
 }
 
-# Versioning
-versioning() {
-    TMP=$(cat arch/arm64/configs/${DEFCONFIG} | grep CONFIG_LOCALVERSION= | tr '[' '+' )
-    DEF=$(echo $TMP | sed 's/-SiLonT:+//g' | sed 's/]//g' | sed 's/"//g' | sed 's/CONFIG_LOCALVERSION/KERNELTYPE/g')
-    export $DEF
-}
-
-# Patch Defconfig
-patch_config() {
-    sed -i "s/${KERNELTYPE}/${KERNELTYPE}-TEST/g" "${KERNEL_DIR}/arch/arm64/configs/${DEFCONFIG}"
-    sed -i 's/CONFIG_THINLTO=y/CONFIG_THINLTO=n/g' arch/arm64/configs/"${DEFCONFIG}"
-    sed -i 's/# CONFIG_LOCALVERSION_AUTO is not set/CONFIG_LOCALVERSION_AUTO=y/g' arch/arm64/configs/"${DEFCONFIG}"
-    sed -i 's/# CONFIG_LOCALVERSION_BRANCH_SHA is not set/CONFIG_LOCALVERSION_AUTO=y/g' arch/arm64/configs/"${DEFCONFIG}"
-}
-
 # Costumize
-patch_config
-versioning
-KERNEL="Hyper-Muteki"
+KERNEL="HyperOS"
 DEVICE="Surya"
 KERNELNAME="${KERNEL}-${DEVICE}-${KERNELTYPE}-$(date +%y%m%d-%H%M)"
 TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
@@ -131,7 +114,7 @@ makekernel() {
     fi
     if [[ "${COMP_TYPE}" =~ "clang" ]]; then
         make -j$(nproc --all) CC=clang CROSS_COMPILE=aarch64-linux-gnu- O=out ARCH=arm64 LLVM=1 2>&1 | tee "$LOGS"
-    else
+    els
       	make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${GCC_DIR}/bin/aarch64-elf-"
     fi
     # Check If compilation is success
