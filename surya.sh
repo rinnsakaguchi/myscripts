@@ -1,161 +1,201 @@
-#!/usr/bin/env bash
-# Copyright (C) 2019-2020 Jago Gardiner (nysascape)
+#!/bin/bash
 #
-# Licensed under the Raphielscape Public License, Version 1.d (the "License");
-# you may not use this file except in compliance with the License.
-#
-# CI build script
+# Copyright (C) 2020 azrim.
+# All rights reserved.
 
-# Needed exports
-export TELEGRAM_TOKEN=7485743487:AAEKPw9ubSKZKit9BDHfNJSTWcWax4STUZs
-export ANYKERNEL=$(pwd)/anykernel3
+# Init
+LOCAL_DIR=${PWD}/
+KERNEL_DIR="${PWD}"
+cd "$KERNEL_DIR" || exit
+DTB_TYPE="" # define as "single" if want use single file
+KERN_IMG="${KERNEL_DIR}"/out/arch/arm64/boot/Image.gz   # if use single file define as Image.gz-dtb instead
+KERN_DTBO="${KERNEL_DIR}"/out/arch/arm64/boot/dtbo.img       # and comment this variable
+KERN_DTB="${KERNEL_DIR}"/out/arch/arm64/boot/dtb.img
+ANYKERNEL="${HOME}"/anykernel
+LOGS="${HOME}"/${CHEAD}.log
 
-# Avoid hardcoding things
-KERNEL=Perf+
-DEFCONFIG=surya_defconfig
-CIPROVIDER=CircleCI
+# Repo URL
+ANYKERNEL_REPO="https://github.com/Yuddciel/AnyKernel3.git"
+ANYKERNEL_BRANCH="FSociety"
+
+# Repo info
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
 COMMIT_POINT="$(git log --pretty=format:'%h : %s' -1)"
+CHEAD="$(git rev-parse --short HEAD)"
+LATEST_COMMIT="[$COMMIT_POINT](https://github.com/rinnsakaguchi/kernel_surya/commit/$CHEAD)"
 
-# Get total RAM
-RAM_INFO=$(free -m)
-TOTAL_RAM=$(echo "$RAM_INFO" | awk '/^Mem:/{print $2}')
-TOTAL_RAM_GB=$(awk "BEGIN {printf \"%.0f\", $TOTAL_RAM/1024}")
-export TOTAL_RAM_GB
+# Compiler
+mkdir -p "${LOCAL_DIR}rasta-clang"
+COMP_TYPE="clang" # unset if want to use gcc as compiler
+CLANG_DIR="${LOCAL_DIR}rasta-clang"
+GCC_DIR="${LOCAL_DIR}toolchain/aarch64-linux-android-4.9" # Doesn't needed if use proton-clang
+GCC32_DIR="${LOCAL_DIR}toolchain/arm-linux-androideabi-4.9" # Doesn't needed if use proton-clang
+CLANG_FILE="${LOCAL_DIR}clang.tar.gz"
 
-# Get all cores of CPU
-PROCS=$(nproc --all)
-export PROCS
+git clone --depth=1 -b clang-21.0 https://gitlab.com/kutemeikito/rastamod69-clang $CLANG_DIR
 
-# Get CPU name
-export CPU_NAME="$(lscpu | sed -nr '/Model name/ s/.*:\s*(.*) */\1/p')"
+if [[ "${COMP_TYPE}" =~ "clang" ]]; then
+    CSTRING=$("$CLANG_DIR"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
+    COMP_PATH="$CLANG_DIR/bin:${PATH}"
+else
+    COMP_PATH="${GCC_DIR}/bin:${GCC32_DIR}/bin:${PATH}"
+fi
 
-# Get distro name
-DISTRO=$(source /etc/os-release && echo ${NAME})
+# Defconfig
+DEFCONFIG="surya_defconfig"
+REGENERATE_DEFCONFIG="" # unset if don't want to regenerate defconfig
 
-# Export custom KBUILD
-export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz
-export OUTFILE=${OUTDIR}/arch/arm64/boot/dtb.img
-export OUTFILE=${OUTDIR}/arch/arm64/boot/dtbo.img
-export KBUILD_BUILD_HOST=M.iqbal_Rembang_Jateng
-export CLANG_PATH=${KERNELDIR}/clang/clang-r498229b
-export PATH=${CLANG_PATH}/bin:${PATH}
-export ARCH=arm64
-export DATE=$(TZ=Asia/Jakarta date)
-# Kernel groups
-CI_CHANNEL=-1002354747626
+# Telegram
+CHATID="-1002354747626" # Group/channel chatid (use rose/userbot to get it)
+TELEGRAM_TOKEN="7485743487:AAEKPw9ubSKZKit9BDHfNJSTWcWax4STUZs"
 
-# Kernel revision
-KERNELRELEASE=surya
+# Export Telegram.sh
+TELEGRAM_FOLDER="${HOME}"/telegram
+if ! [ -d "${TELEGRAM_FOLDER}" ]; then
+    git clone https://github.com/fabianonline/telegram.sh/ "${TELEGRAM_FOLDER}"
+fi
 
-# Clang is annoying
-PATH="${KERNELDIR}/clang-r498229b//bin:${PATH}"
-
-# Set date and time
-DATE=$(TZ=Asia/Jakarta date)
-
-# Set date and time for zip name
-ZIP_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
-
-# Function to replace defconfig versioning
-setversioning() {
-
-# For staging branch
-            KERNELNAME="${KERNEL}-${KERNELRELEASE}-KSU-${ZIP_DATE}"
-	    
-    # Export our new localversion and zipnames
-    export KERNELTYPE KERNELNAME
-    export TEMPZIPNAME="${KERNELNAME}.zip"
-    export ZIPNAME="${KERNELNAME}.zip"
-}
-
-# Send to channel
-tg_channelcast() {
-    "${TELEGRAM}" -c "${CI_CHANNEL}" -H \
-    "$(2
+TELEGRAM="${TELEGRAM_FOLDER}"/telegram
+tg_cast() {
+	curl -s -X POST https://api.telegram.org/bot"$TELEGRAM_TOKEN"/sendMessage -d disable_web_page_preview="true" -d chat_id="$CHATID" -d "parse_mode=MARKDOWN" -d text="$(
 		for POST in "${@}"; do
 			echo "${POST}"
 		done
+	)" &> /dev/null
+}
+tg_ship() {
+    "${TELEGRAM}" -f "${ZIPNAME}" -t "${TELEGRAM_TOKEN}" -c "${CHATID}" -H \
+    "$(
+                for POST in "${@}"; do
+                        echo "${POST}"
+                done
+    )"
+}
+tg_fail() {
+    "${TELEGRAM}" -f "${LOGS}" -t "${TELEGRAM_TOKEN}" -c "${CHATID}" -H \
+    "$(
+                for POST in "${@}"; do
+                        echo "${POST}"
+                done
     )"
 }
 
-# Fix long kernel strings
-kernelstringfix() {
-    git config --global user.name "mahirooo24"
-    git config --global user.email "hiroo24km@gmail.com"
-    git add .
-    git commit -m "stop adding dirty"
+# Versioning
+versioning() {
+    TMP=$(cat arch/arm64/configs/${DEFCONFIG} | grep CONFIG_LOCALVERSION= | tr '[' '+' )
+    DEF=$(echo $TMP | sed 's/-SiLonT:+//g' | sed 's/]//g' | sed 's/"//g' | sed 's/CONFIG_LOCALVERSION/KERNELTYPE/g')
+    export $DEF
 }
 
-# Make the kernel
-makekernel() {
-    # Clean any old AnyKernel
-    rm -rf ${ANYKERNEL}
-    git clone https://github.com/Aex-Mod/AnyKernel3 -b surya anykernel3
-    kernelstringfix
-    make O=out ARCH=arm64 ${DEFCONFIG}
-    if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
-        make -j$(nproc --all) \
-	O=out \
-	CC="${ccache_} clang" \
-	AS=llvm-as \
-	LD=ld.lld \
-	AR=llvm-ar \
-	NM=llvm-nm \
-	STRIP=llvm-strip \
-	OBJCOPY=llvm-objcopy \
-	OBJDUMP=llvm-objdump \
-	CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-none-linux-gnu-" \
-	CROSS_COMPILE_COMPAT="${KERNELDIR}/gcc32/bin/arm-none-linux-gnueabihf-"
-    else
-	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
-    fi
+# Patch Defconfig
+patch_config() {
+    sed -i "s/${KERNELTYPE}/${KERNELTYPE}-TEST/g" "${KERNEL_DIR}/arch/arm64/configs/${DEFCONFIG}"
+    sed -i 's/CONFIG_THINLTO=y/CONFIG_THINLTO=n/g' arch/arm64/configs/"${DEFCONFIG}"
+    sed -i 's/# CONFIG_LOCALVERSION_AUTO is not set/CONFIG_LOCALVERSION_AUTO=y/g' arch/arm64/configs/"${DEFCONFIG}"
+    sed -i 's/# CONFIG_LOCALVERSION_BRANCH_SHA is not set/CONFIG_LOCALVERSION_AUTO=y/g' arch/arm64/configs/"${DEFCONFIG}"
+}
 
-    # Check if compilation is done successfully.
-    if ! [ -f "${OUTFILE}" ]; then
+# Costumize
+patch_config
+versioning
+KERNEL="Hyper-Muteki"
+DEVICE="Surya"
+KERNELNAME="${KERNEL}-${DEVICE}-${KERNELTYPE}-$(date +%y%m%d-%H%M)"
+TEMPZIPNAME="${KERNELNAME}-unsigned.zip"
+ZIPNAME="${KERNELNAME}.zip"
+
+# Regenerating Defconfig
+regenerate() {
+    cp out/.config arch/arm64/configs/"${DEFCONFIG}"
+    git add arch/arm64/configs/"${DEFCONFIG}"
+    git commit -m "defconfig: Regenerate"
+}
+
+# Build Failed
+build_failed() {
 	    END=$(date +"%s")
 	    DIFF=$(( END - START ))
 	    echo -e "Kernel compilation failed, See buildlog to fix errors"
-	    tg_channelcast "Build for ${DEVICE} <b>failed</b> in $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)! Check ${CIPROVIDER} for errors!"
+	    tg_fail "Build for ${DEVICE} <b>failed</b> in $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)!"
 	    exit 1
-    fi
 }
 
-# Ship the compiled kernel
-shipkernel() {
+# Building
+makekernel() {
+    echo "mahiroo@hirateam" > "$KERNEL_DIR"/.builderdata
+    export PATH="${COMP_PATH}"
+    make O=out ARCH=arm64 ${DEFCONFIG}
+    if [[ "${REGENERATE_DEFCONFIG}" =~ "true" ]]; then
+        regenerate
+    fi
+    if [[ "${COMP_TYPE}" =~ "clang" ]]; then
+        make -j$(nproc --all) CC=clang CROSS_COMPILE=aarch64-linux-gnu- O=out ARCH=arm64 LLVM=1 2>&1 | tee "$LOGS"
+    else
+      	make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${GCC_DIR}/bin/aarch64-elf-"
+    fi
+    # Check If compilation is success
+    packingkernel
+}
+
+# Packing kranul
+packingkernel() {
     # Copy compiled kernel
-    cp "${OUTDIR}"/arch/arm64/boot/Image.gz "${ANYKERNEL}"/
-    cp "${OUTDIR}"/arch/arm64/boot/dtb.img "${ANYKERNEL}"/
-    cp "${OUTDIR}"/arch/arm64/boot/dtbo.img "${ANYKERNEL}"/
-   
+    if [ -d "${ANYKERNEL}" ]; then
+        rm -rf "${ANYKERNEL}"
+    fi
+    git clone "$ANYKERNEL_REPO" -b "$ANYKERNEL_BRANCH" "${ANYKERNEL}"
+    if ! [ -f "${KERN_IMG}" ]; then
+        build_failed
+    fi
+    if ! [ -f "${KERN_DTBO}" ]; then
+        build_failed
+    fi
+    if [[ "${DTB_TYPE}" =~ "single" ]]; then
+        cp "${KERN_IMG}" "${ANYKERNEL}"/Image.gz-dtb
+    else
+        cp "${KERN_IMG}" "${ANYKERNEL}"/Image.gz
+        cp "${KERN_DTBO}" "${ANYKERNEL}"/dtbo.img
+        cp "${KERN_DTB}" "${ANYKERNEL}"/dtb.img
+    fi
+
     # Zip the kernel, or fail
     cd "${ANYKERNEL}" || exit
-    zip -r9 "${TEMPZIPNAME}" *
+    zip -r9 "${TEMPZIPNAME}" ./* -x .git README.md *placeholder
+
+    # Sign the zip before sending it to Telegram
+    curl -sLo zipsigner-4.0.jar https://raw.githubusercontent.com/baalajimaestro/AnyKernel3/master/zipsigner-4.0.jar
+    java -jar zipsigner-4.0.jar "${TEMPZIPNAME}" "${ZIPNAME}"
+
+    END=$(date +"%s")
+    DIFF=$(( END - START ))
 
     # Ship it to the CI channel
-    "${TELEGRAM}" -f "$ZIPNAME" -c "${CI_CHANNEL}"
-
-    # Go back for any extra builds
-    cd ..
+    tg_ship "<b>-------- $DRONE_BUILD_NUMBER Build Succeed --------</b>" \
+            "" \
+            "<b>Device:</b> ${DEVICE}" \
+            "<b>Version:</b> ${KERNELTYPE}" \
+            "<b>Commit Head:</b> ${CHEAD}" \
+            "<b>Time elapsed:</b> $((DIFF / 60)):$((DIFF % 60))" \
+            "" \
+            "Leave a comment below if encountered any bugs!"
 }
 
-## Start the kernel buildflow ##
-setversioning
-tg_channelcast "Docker OS: <code>$DISTRO</code>" \
-        "Compiler: <code>${COMPILER_STRING}</code>" \
-	"Device: <code>Poco X3 NFC (surya)</code>" \
-	"Linux Version: <code>$(make kernelversion)</code>" \
-        "Date: <code>$DATE</code>" \
-	"Branch: <code>${PARSE_BRANCH}</code>" \
-        "Host RAM Count: <code>${TOTAL_RAM_GB}</code>" \
-        "Pipeline Host: <code>${KBUILD_BUILD_HOST}</code>" \
-        "Host CPU Name: <code>${CPU_NAME}</code>" \
-        "Host Core Count: <code>${PROCS} core(s)</code>" \
-	"Commit point: <code>${COMMIT_POINT}</code>"
+# Starting
+NOW=$(date +%d/%m/%Y-%H:%M)
 START=$(date +"%s")
-makekernel || exit 1
-shipkernel
-END=$(date +"%s")
-DIFF=$(( END - START ))
-tg_channelcast "Build for Poco X3 NFC with ${COMPILER_STRING} <b>succeed</b> took $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)!"
+tg_cast "*$DRONE_BUILD_NUMBER CI Build Triggered*" \
+	"Compiling with *$(nproc --all)* CPUs" \
+	"-----------------------------------------" \
+	"*Compiler:* ${CSTRING}" \
+	"*Device:* ${DEVICE}" \
+	"*Kernel:* ${KERNEL}" \
+	"*Version:* ${KERNELTYPE}" \
+	"*Linux Version:* $(make kernelversion)" \
+	"*Branch:* ${DRONE_BRANCH}" \
+	"*Clocked at:* ${NOW}" \
+	"*Latest commit:* ${LATEST_COMMIT}" \
+ 	"------------------------------------------" \
+	"${LOGS_URL}"
+
+makekernel
