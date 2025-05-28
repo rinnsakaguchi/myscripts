@@ -29,10 +29,3 @@ if [[ "${COMPILER_TYPES}" =~ "clang" ]]; then
 fi    
 
 export COMPILER_STRING COMPILER_TYPE KERNELDIR SCRIPTS OUTDIR
-
-git clone https://github.com/fabianonline/telegram.sh/ telegram
-
-# Export Telegram.sh
-TELEGRAM=${KERNELDIR}/telegram/telegram
-
-export TELEGRAM JOBS
