@@ -7,11 +7,11 @@
 # CI build script
 
 # Needed exports
-export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
+export TELEGRAM_TOKEN=7485743487:AAEKPw9ubSKZKit9BDHfNJSTWcWax4STUZs
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=Perf
+KERNEL=Hyper
 DEFCONFIG=surya_ksu_defconfig
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -38,14 +38,14 @@ DISTRO=$(source /etc/os-release && echo ${NAME})
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 export OUTFILE=${OUTDIR}/arch/arm64/boot/dtb.img
 export OUTFILE=${OUTDIR}/arch/arm64/boot/dtbo.img
-export KBUILD_BUILD_USER=IqbaL
-export KBUILD_BUILD_HOST=NajlA
+export KBUILD_BUILD_USER=mahiroo
+export KBUILD_BUILD_HOST=android@builder
 export CLANG_PATH=${KERNELDIR}/clang/clang-r498229b
 export PATH=${CLANG_PATH}/bin:${PATH}
 export ARCH=arm64
 export DATE=$(TZ=Asia/Jakarta date)
 # Kernel groups
-CI_CHANNEL=-1001488385343
+CI_CHANNEL=-1002354747626
 
 # Kernel revision
 KERNELRELEASE=surya
@@ -83,8 +83,8 @@ tg_channelcast() {
 
 # Fix long kernel strings
 kernelstringfix() {
-    git config --global user.name "predator112"
-    git config --global user.email "mi460334@gmail.com"
+    git config --global user.name "mahirooo"
+    git config --global user.email "mahiroo@revert.com"
     git add .
     git commit -m "stop adding dirty"
 }
@@ -93,7 +93,7 @@ kernelstringfix() {
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    git clone https://github.com/Aex-Mod/AnyKernel3 -b surya anykernel3
+    git clone https://github.com/Yuddciel/AnyKernel3.git -b FSociety anykernel3
     kernelstringfix
     make O=out ARCH=arm64 ${DEFCONFIG}
     if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
