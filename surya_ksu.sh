@@ -11,7 +11,7 @@ export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
 KERNEL=Hyper
-DEFCONFIG=surya_ksu_defconfig
+DEFCONFIG=surya_defconfig
 CIPROVIDER=Github
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 PARSE_ORIGIN="$(git config --get remote.origin.url)"
@@ -61,18 +61,6 @@ DATE=$(TZ=Asia/Jakarta date)
 # Set date and time for zip name
 ZIP_DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 
-# Function to replace defconfig versioning
-setversioning() {
-
-# For staging branch
-            KERNELNAME="${KERNEL}-${KERNELRELEASE}-KSU-${ZIP_DATE}"
-	    
-    # Export our new localversion and zipnames
-    export KERNELTYPE KERNELNAME
-    export TEMPZIPNAME="${KERNELNAME}.zip"
-    export ZIPNAME="${KERNELNAME}.zip"
-}
-
 # Export Telegram.sh
 TELEGRAM_FOLDER="${HOME}"/telegram
 if ! [ -d "${TELEGRAM_FOLDER}" ]; then
@@ -104,17 +92,7 @@ tg_fail() {
     )"
 }
 
-# Patch Defconfig
-patch_config() {
-    sed -i "s/${KERNELTYPE}/${KERNELTYPE}-TEST/g" "${KERNEL_DIR}/arch/arm64/configs/${DEFCONFIG}"
-    sed -i 's/CONFIG_THINLTO=y/CONFIG_THINLTO=n/g' arch/arm64/configs/"${DEFCONFIG}"
-    sed -i 's/# CONFIG_LOCALVERSION_AUTO is not set/CONFIG_LOCALVERSION_AUTO=y/g' arch/arm64/configs/"${DEFCONFIG}"
-    sed -i 's/# CONFIG_LOCALVERSION_BRANCH_SHA is not set/CONFIG_LOCALVERSION_AUTO=y/g' arch/arm64/configs/"${DEFCONFIG}"
-}
-
 # Costumize
-patch_config
-versioning
 KERNEL="Predator:[Akane]"
 DEVICE="Surya"
 KERNELNAME="${KERNEL}-${DEVICE}-${KERNELTYPE}-$(date +%y%m%d-%H%M)"
@@ -202,11 +180,9 @@ tg_cast "*$DRONE_BUILD_NUMBER CI Build Triggered*" \
 	"*Compiler:* ${CSTRING}" \
 	"*Device:* ${DEVICE}" \
 	"*Kernel:* ${KERNEL}" \
-	"*Version:* ${KERNELTYPE}" \
+	"*Version:* Akane" \
 	"*Linux Version:* $(make kernelversion)" \
-	"*Pipeline Host:* <code>${KBUILD_BUILD_HOST}</code>" \
-    "*Host CPU Name:* <code>${CPU_NAME}</code>" \
-    "*Host Core Count:* <code>${PROCS} core(s)</code>" \
+	"*Builder Host:* Mahiroo" \
 	"*Branch:* ${DRONE_BRANCH}" \
 	"*Clocked at:* ${NOW}" \
 	"*Latest commit:* ${LATEST_COMMIT}" \
