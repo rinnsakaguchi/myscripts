@@ -7,7 +7,7 @@
 # CI build script
 
 # Needed exports
-export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
+export TELEGRAM_TOKEN=7485743487:AAEKPw9ubSKZKit9BDHfNJSTWcWax4STUZs
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
@@ -45,7 +45,7 @@ export PATH=${CLANG_PATH}/bin:${PATH}
 export ARCH=arm64
 export DATE=$(TZ=Asia/Jakarta date)
 # Kernel groups
-CI_CHANNEL=-1001488385343
+CI_CHANNEL=-1002354747626
 
 # Kernel revision
 KERNELRELEASE=surya
@@ -81,34 +81,29 @@ tg_channelcast() {
     )"
 }
 
-# Fix long kernel strings
-kernelstringfix() {
-    git config --global user.name "predator112"
-    git config --global user.email "mi460334@gmail.com"
-    git add .
-    git commit -m "stop adding dirty"
-}
-
 # Make the kernel
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
     git clone https://github.com/Aex-Mod/AnyKernel3 -b surya anykernel3
-    kernelstringfix
     make O=out ARCH=arm64 ${DEFCONFIG}
     if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
         make -j$(nproc --all) \
-	O=out \
-	CC="${ccache_} clang" \
-	AS=llvm-as \
-	LD=ld.lld \
-	AR=llvm-ar \
-	NM=llvm-nm \
-	STRIP=llvm-strip \
-	OBJCOPY=llvm-objcopy \
-	OBJDUMP=llvm-objdump \
-	CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-none-linux-gnu-" \
-	CROSS_COMPILE_COMPAT="${KERNELDIR}/gcc32/bin/arm-none-linux-gnueabihf-"
+	    O=out \
+	    CC="${ccache_} clang" \
+	    LD=ld.lld \
+            AS=llvm-as \
+            AR=llvm-ar \
+            NM=llvm-nm \
+            OBJCOPY=llvm-objcopy \
+            OBJDUMP=llvm-objdump \
+            STRIP=llvm-strip \
+            CLANG_TRIPLE=aarch64-linux-gnu- \
+            LLVM=1 \
+            LLVM_IAS=1 \
+            DTC_EXT=dtc \
+	    CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-none-linux-gnu-" \
+	    CROSS_COMPILE_COMPAT="${KERNELDIR}/gcc32/bin/arm-none-linux-gnueabihf-"
     else
 	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
     fi
@@ -142,14 +137,6 @@ shipkernel() {
 }
 
 # Ship China firmware builds
-setksu() {
-    export KSU=KSU
-    # Pick DSP change
-    sed -i 's/CONFIG_KSU=n/CONFIG_KSU=y/g' arch/arm64/configs/${DEFCONFIG}
-    echo -e "KSU ready"
-}
-
-# Ship China firmware builds
 clearout() {
     # Pick DSP change
     rm -rf out
@@ -180,7 +167,6 @@ tg_channelcast "Docker OS: <code>$DISTRO</code>" \
 START=$(date +"%s")
 makekernel || exit 1
 shipkernel
-setksu
 setver2
 makekernel || exit 1
 shipkernel
