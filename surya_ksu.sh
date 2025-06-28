@@ -7,11 +7,11 @@
 # CI build script
 
 # Needed exports
-export TELEGRAM_TOKEN=1157809262:AAHNbCHG-XcjgpGuDflcTX8Z_OJiXcjdDr0
+export TELEGRAM_TOKEN=7485743487:AAEKPw9ubSKZKit9BDHfNJSTWcWax4STUZs
 export ANYKERNEL=$(pwd)/anykernel3
 
 # Avoid hardcoding things
-KERNEL=Perf
+KERNEL=Perf-qgki
 DEFCONFIG=surya_ksu_defconfig
 CIPROVIDER=CircleCI
 PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -38,20 +38,20 @@ DISTRO=$(source /etc/os-release && echo ${NAME})
 export OUTFILE=${OUTDIR}/arch/arm64/boot/Image.gz-dtb
 export OUTFILE=${OUTDIR}/arch/arm64/boot/dtb.img
 export OUTFILE=${OUTDIR}/arch/arm64/boot/dtbo.img
-export KBUILD_BUILD_USER=IqbaL
-export KBUILD_BUILD_HOST=NajlA
-export CLANG_PATH=${KERNELDIR}/clang/clang-r498229b
+export KBUILD_BUILD_USER=mahiroo
+export KBUILD_BUILD_HOST=android-build
+export CLANG_PATH=${PWD}/clang
 export PATH=${CLANG_PATH}/bin:${PATH}
 export ARCH=arm64
 export DATE=$(TZ=Asia/Jakarta date)
 # Kernel groups
-CI_CHANNEL=-1001488385343
+CI_CHANNEL=-1002354747626
 
 # Kernel revision
 KERNELRELEASE=surya
 
 # Clang is annoying
-PATH="${KERNELDIR}/clang/clang-r498229b/bin:${PATH}"
+PATH="${PWD}/clang/bin:${PATH}"
 
 # Set date and time
 DATE=$(TZ=Asia/Jakarta date)
@@ -81,20 +81,11 @@ tg_channelcast() {
     )"
 }
 
-# Fix long kernel strings
-kernelstringfix() {
-    git config --global user.name "predator112"
-    git config --global user.email "mi460334@gmail.com"
-    git add .
-    git commit -m "stop adding dirty"
-}
-
 # Make the kernel
 makekernel() {
     # Clean any old AnyKernel
     rm -rf ${ANYKERNEL}
-    git clone https://github.com/Aex-Mod/AnyKernel3 -b surya anykernel3
-    kernelstringfix
+    git clone https://github.com/rinnsakaguchi/AnyKernel3.git -b FSociety anykernel3
     make O=out ARCH=arm64 ${DEFCONFIG}
     if [[ "${COMPILER_TYPE}" =~ "clang"* ]]; then
         make -j$(nproc --all) \
@@ -107,10 +98,10 @@ makekernel() {
 	STRIP=llvm-strip \
 	OBJCOPY=llvm-objcopy \
 	OBJDUMP=llvm-objdump \
-	CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-none-linux-gnu-" \
-	CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-none-linux-gnueabihf-"
+	CROSS_COMPILE="${PWD}/gcc/bin/aarch64-none-linux-gnu-" \
+	CROSS_COMPILE_ARM32="${PWD}/gcc32/bin/arm-none-linux-gnueabihf-"
     else
-	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${KERNELDIR}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${KERNELDIR}/gcc32/bin/arm-eabi-"
+	    make -j$(nproc --all) O=out ARCH=arm64 CROSS_COMPILE="${PWD}/gcc/bin/aarch64-elf-" CROSS_COMPILE_ARM32="${PWD}/gcc32/bin/arm-eabi-"
     fi
 
     # Check if compilation is done successfully.
